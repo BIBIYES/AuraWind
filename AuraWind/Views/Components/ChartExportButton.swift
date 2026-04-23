@@ -117,6 +117,7 @@ struct ChartExportButton: View {
     
     // MARK: - Export Menu Content
     
+    @ViewBuilder
     private var exportMenuContent: some View {
         Button {
             performQuickExport(format: .csv)

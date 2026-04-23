@@ -1,0 +1,712 @@
+﻿2026-04-23T15:25:56.4682870Z Current runner version: '2.333.1'
+2026-04-23T15:25:56.4698070Z ##[group]Runner Image Provisioner
+2026-04-23T15:25:56.4698540Z Hosted Compute Agent
+2026-04-23T15:25:56.4698870Z Version: 20260213.493
+2026-04-23T15:25:56.4699260Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+2026-04-23T15:25:56.4699680Z Build Date: 2026-02-13T00:28:41Z
+2026-04-23T15:25:56.4700080Z Worker ID: {1c6e27c0-f117-4bb7-8e8d-7e5e656615b2}
+2026-04-23T15:25:56.4700500Z Azure Region: westus
+2026-04-23T15:25:56.4700820Z ##[endgroup]
+2026-04-23T15:25:56.4701690Z ##[group]Operating System
+2026-04-23T15:25:56.4702040Z macOS
+2026-04-23T15:25:56.4702310Z 15.7.4
+2026-04-23T15:25:56.4702570Z 24G517
+2026-04-23T15:25:56.4702850Z ##[endgroup]
+2026-04-23T15:25:56.4703140Z ##[group]Runner Image
+2026-04-23T15:25:56.4703460Z Image: macos-15-arm64
+2026-04-23T15:25:56.4703770Z Version: 20260414.0270.1
+2026-04-23T15:25:56.4704510Z Included Software: https://github.com/actions/runner-images/blob/macos-15-arm64/20260414.0270/images/macos/macos-15-arm64-Readme.md
+2026-04-23T15:25:56.4705460Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15-arm64%2F20260414.0270
+2026-04-23T15:25:56.4706060Z ##[endgroup]
+2026-04-23T15:25:56.4706760Z ##[group]GITHUB_TOKEN Permissions
+2026-04-23T15:25:56.4707880Z Contents: read
+2026-04-23T15:25:56.4708180Z Metadata: read
+2026-04-23T15:25:56.4708690Z Packages: read
+2026-04-23T15:25:56.4709030Z ##[endgroup]
+2026-04-23T15:25:56.4710490Z Secret source: Actions
+2026-04-23T15:25:56.4711000Z Prepare workflow directory
+2026-04-23T15:25:56.4920380Z Prepare all required actions
+2026-04-23T15:25:56.4950210Z Getting action download info
+2026-04-23T15:25:56.7765920Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-04-23T15:25:56.9656780Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-04-23T15:25:57.1515330Z Complete job name: build
+2026-04-23T15:25:57.1893420Z ##[group]Run actions/checkout@v4
+2026-04-23T15:25:57.1893890Z with:
+2026-04-23T15:25:57.1894150Z   repository: BIBIYES/AuraWind
+2026-04-23T15:25:57.1894550Z   token: ***
+2026-04-23T15:25:57.1894800Z   ssh-strict: true
+2026-04-23T15:25:57.1895060Z   ssh-user: git
+2026-04-23T15:25:57.1895320Z   persist-credentials: true
+2026-04-23T15:25:57.1895620Z   clean: true
+2026-04-23T15:25:57.1895890Z   sparse-checkout-cone-mode: true
+2026-04-23T15:25:57.1896200Z   fetch-depth: 1
+2026-04-23T15:25:57.1896460Z   fetch-tags: false
+2026-04-23T15:25:57.1896720Z   show-progress: true
+2026-04-23T15:25:57.1897000Z   lfs: false
+2026-04-23T15:25:57.1897240Z   submodules: false
+2026-04-23T15:25:57.1897510Z   set-safe-directory: true
+2026-04-23T15:25:57.1897890Z ##[endgroup]
+2026-04-23T15:25:57.4556350Z Syncing repository: BIBIYES/AuraWind
+2026-04-23T15:25:57.4557730Z ##[group]Getting Git version info
+2026-04-23T15:25:57.4558250Z Working directory is '/Users/runner/work/AuraWind/AuraWind'
+2026-04-23T15:25:57.4559080Z [command]/opt/homebrew/bin/git version
+2026-04-23T15:25:57.5155730Z git version 2.53.0
+2026-04-23T15:25:57.5185260Z ##[endgroup]
+2026-04-23T15:25:57.5196170Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/aea191e3-856d-4abe-96b2-bc4c8a7c504a/.gitconfig'
+2026-04-23T15:25:57.5203840Z Temporarily overriding HOME='/Users/runner/work/_temp/aea191e3-856d-4abe-96b2-bc4c8a7c504a' before making global git config changes
+2026-04-23T15:25:57.5205030Z Adding repository directory to the temporary git global config as a safe directory
+2026-04-23T15:25:57.5208420Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:25:57.5319850Z Deleting the contents of '/Users/runner/work/AuraWind/AuraWind'
+2026-04-23T15:25:57.5322490Z ##[group]Initializing the repository
+2026-04-23T15:25:57.5327340Z [command]/opt/homebrew/bin/git init /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:25:57.5654260Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-04-23T15:25:57.5655100Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-04-23T15:25:57.5656190Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-04-23T15:25:57.5656780Z hint: call:
+2026-04-23T15:25:57.5657080Z hint:
+2026-04-23T15:25:57.5657480Z hint: 	git config --global init.defaultBranch <name>
+2026-04-23T15:25:57.5657920Z hint:
+2026-04-23T15:25:57.5658380Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-04-23T15:25:57.5659350Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-04-23T15:25:57.5659900Z hint:
+2026-04-23T15:25:57.5660280Z hint: 	git branch -m <name>
+2026-04-23T15:25:57.5660630Z hint:
+2026-04-23T15:25:57.5661100Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-04-23T15:25:57.5661880Z Initialized empty Git repository in /Users/runner/work/AuraWind/AuraWind/.git/
+2026-04-23T15:25:57.5664360Z [command]/opt/homebrew/bin/git remote add origin https://github.com/BIBIYES/AuraWind
+2026-04-23T15:25:57.5736460Z ##[endgroup]
+2026-04-23T15:25:57.5737250Z ##[group]Disabling automatic garbage collection
+2026-04-23T15:25:57.5738450Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-04-23T15:25:57.5796250Z ##[endgroup]
+2026-04-23T15:25:57.5796820Z ##[group]Setting up auth
+2026-04-23T15:25:57.5801420Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-04-23T15:25:57.5858430Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-04-23T15:25:57.7059570Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-04-23T15:25:57.7111790Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-04-23T15:25:57.7728360Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-04-23T15:25:57.7776480Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-04-23T15:25:57.8549590Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-04-23T15:25:57.8607170Z ##[endgroup]
+2026-04-23T15:25:57.8607780Z ##[group]Fetching the repository
+2026-04-23T15:25:57.8612540Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +21cc15450df211be3bb28f058fea2d658f93a23e:refs/remotes/origin/main
+2026-04-23T15:25:59.0395220Z From https://github.com/BIBIYES/AuraWind
+2026-04-23T15:25:59.0400910Z  * [new ref]         21cc15450df211be3bb28f058fea2d658f93a23e -> origin/main
+2026-04-23T15:25:59.0484450Z ##[endgroup]
+2026-04-23T15:25:59.0485440Z ##[group]Determining the checkout info
+2026-04-23T15:25:59.0486050Z ##[endgroup]
+2026-04-23T15:25:59.0486510Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-04-23T15:25:59.0558190Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-04-23T15:25:59.0615400Z ##[group]Checking out the ref
+2026-04-23T15:25:59.0616960Z [command]/opt/homebrew/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-04-23T15:25:59.0873990Z Switched to a new branch 'main'
+2026-04-23T15:25:59.0875480Z branch 'main' set up to track 'origin/main'.
+2026-04-23T15:25:59.0877760Z ##[endgroup]
+2026-04-23T15:25:59.0947190Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-04-23T15:25:59.1001320Z 21cc15450df211be3bb28f058fea2d658f93a23e
+2026-04-23T15:25:59.1169520Z ##[group]Run xcodebuild -version
+2026-04-23T15:25:59.1169910Z [36;1mxcodebuild -version[0m
+2026-04-23T15:25:59.1205460Z shell: /bin/bash -e {0}
+2026-04-23T15:25:59.1205750Z ##[endgroup]
+2026-04-23T15:25:59.3587440Z Xcode 16.4
+2026-04-23T15:25:59.3596520Z Build version 16F6
+2026-04-23T15:25:59.3646810Z ##[group]Run set -o pipefail
+2026-04-23T15:25:59.3647200Z [36;1mset -o pipefail[0m
+2026-04-23T15:25:59.3647430Z [36;1mmkdir -p build/logs[0m
+2026-04-23T15:25:59.3647650Z [36;1mxcodebuild \[0m
+2026-04-23T15:25:59.3647960Z [36;1m  -project AuraWind.xcodeproj \[0m
+2026-04-23T15:25:59.3648230Z [36;1m  -scheme AuraWind \[0m
+2026-04-23T15:25:59.3648480Z [36;1m  -configuration Release \[0m
+2026-04-23T15:25:59.3648770Z [36;1m  -derivedDataPath "$DERIVED_DATA_PATH" \[0m
+2026-04-23T15:25:59.3649100Z [36;1m  clean build | tee build/logs/xcodebuild.log[0m
+2026-04-23T15:25:59.3676790Z shell: /bin/bash -e {0}
+2026-04-23T15:25:59.3677000Z env:
+2026-04-23T15:25:59.3677270Z   DERIVED_DATA_PATH: /Users/runner/work/AuraWind/AuraWind/build/DerivedData
+2026-04-23T15:25:59.3677610Z ##[endgroup]
+2026-04-23T15:26:00.6974810Z Command line invocation:
+2026-04-23T15:26:00.7019030Z     /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/xcodebuild -project AuraWind.xcodeproj -scheme AuraWind -configuration Release -derivedDataPath /Users/runner/work/AuraWind/AuraWind/build/DerivedData clean build
+2026-04-23T15:26:00.7024650Z 
+2026-04-23T15:26:02.2246760Z --- xcodebuild: WARNING: Using the first of multiple matching destinations:
+2026-04-23T15:26:02.2247600Z { platform:macOS, arch:arm64, id:5523067022f9d9889ab2cba2e9b9f8d9329e5443, name:My Mac }
+2026-04-23T15:26:02.2248350Z { platform:macOS, arch:x86_64, id:5523067022f9d9889ab2cba2e9b9f8d9329e5443, name:My Mac }
+2026-04-23T15:26:02.2251080Z { platform:macOS, name:Any Mac }
+2026-04-23T15:26:02.5850790Z ComputePackagePrebuildTargetDependencyGraph
+2026-04-23T15:26:02.6465540Z 
+2026-04-23T15:26:02.6485130Z CreateBuildRequest
+2026-04-23T15:26:02.6488010Z 
+2026-04-23T15:26:02.6488330Z SendProjectDescription
+2026-04-23T15:26:02.6591030Z 
+2026-04-23T15:26:02.6626330Z CreateBuildOperation
+2026-04-23T15:26:02.6780300Z 
+2026-04-23T15:26:02.6911570Z --- xcodebuild: WARNING: Using the first of multiple matching destinations:
+2026-04-23T15:26:02.6912060Z ** CLEAN SUCCEEDED **
+2026-04-23T15:26:02.6914540Z { platform:macOS, arch:arm64, id:5523067022f9d9889ab2cba2e9b9f8d9329e5443, name:My Mac }
+2026-04-23T15:26:02.6914870Z 
+2026-04-23T15:26:02.6929260Z { platform:macOS, arch:x86_64, id:5523067022f9d9889ab2cba2e9b9f8d9329e5443, name:My Mac }
+2026-04-23T15:26:02.6929850Z { platform:macOS, name:Any Mac }
+2026-04-23T15:26:02.6952770Z ComputePackagePrebuildTargetDependencyGraph
+2026-04-23T15:26:02.7055330Z 
+2026-04-23T15:26:02.7070880Z Prepare packages
+2026-04-23T15:26:02.7071480Z 
+2026-04-23T15:26:02.7079140Z CreateBuildRequest
+2026-04-23T15:26:02.7079630Z 
+2026-04-23T15:26:02.7079990Z SendProjectDescription
+2026-04-23T15:26:02.7297050Z 
+2026-04-23T15:26:02.7297920Z CreateBuildOperation
+2026-04-23T15:26:02.7362360Z 
+2026-04-23T15:26:02.7363320Z ComputeTargetDependencyGraph
+2026-04-23T15:26:02.7495390Z note: Building targets in dependency order
+2026-04-23T15:26:02.7496700Z note: Target dependency graph (2 targets)
+2026-04-23T15:26:02.7505720Z     Target 'AuraWind' in project 'AuraWind'
+2026-04-23T15:26:02.7506590Z         ➜ Explicit dependency on target 'SMCHelper' in project 'AuraWind'
+2026-04-23T15:26:02.7507450Z     Target 'SMCHelper' in project 'AuraWind' (no dependencies)
+2026-04-23T15:26:02.7507690Z 
+2026-04-23T15:26:02.7511220Z GatherProvisioningInputs
+2026-04-23T15:26:02.8304740Z 
+2026-04-23T15:26:02.8439730Z CreateBuildDescription
+2026-04-23T15:26:02.8671160Z 
+2026-04-23T15:26:02.8672210Z ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+2026-04-23T15:26:05.2231220Z 
+2026-04-23T15:26:05.2333450Z ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+2026-04-23T15:26:07.2688220Z 
+2026-04-23T15:26:07.2807260Z ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -x c -c /dev/null
+2026-04-23T15:26:07.2991540Z 
+2026-04-23T15:26:07.3111590Z ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+2026-04-23T15:26:07.3179500Z 
+2026-04-23T15:26:07.3181340Z Build description signature: 52804b732a0da44a82f9af3dc8dbf960
+2026-04-23T15:26:07.3183900Z Build description path: /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/XCBuildData/52804b732a0da44a82f9af3dc8dbf960.xcbuilddata
+2026-04-23T15:26:07.3734500Z ClangStatCache /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache
+2026-04-23T15:26:07.3838900Z     cd /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj
+2026-04-23T15:26:07.3840190Z     /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache
+2026-04-23T15:26:13.3817170Z 
+2026-04-23T15:26:13.3818560Z CreateBuildDirectory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex
+2026-04-23T15:26:13.3819620Z     cd /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj
+2026-04-23T15:26:13.3820340Z     builtin-create-build-directory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex
+2026-04-23T15:26:13.3820860Z 
+2026-04-23T15:26:13.3821120Z CreateBuildDirectory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products
+2026-04-23T15:26:13.3821830Z     cd /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj
+2026-04-23T15:26:13.3822320Z     builtin-create-build-directory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products
+2026-04-23T15:26:13.3822710Z 
+2026-04-23T15:26:13.3823260Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind-c8c93956ebf2e414db1acdc68774bc79-VFS/all-product-headers.yaml
+2026-04-23T15:26:13.3824140Z     cd /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj
+2026-04-23T15:26:13.3824910Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind-c8c93956ebf2e414db1acdc68774bc79-VFS/all-product-headers.yaml
+2026-04-23T15:26:13.3825550Z 
+2026-04-23T15:26:13.3825870Z CreateBuildDirectory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Release
+2026-04-23T15:26:13.3826520Z     cd /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj
+2026-04-23T15:26:13.3827130Z     builtin-create-build-directory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Release
+2026-04-23T15:26:13.3827660Z 
+2026-04-23T15:26:13.3827880Z CreateBuildDirectory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release
+2026-04-23T15:26:13.3828380Z     cd /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj
+2026-04-23T15:26:13.3828920Z     builtin-create-build-directory /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release
+2026-04-23T15:26:13.3829260Z 
+2026-04-23T15:26:13.3829920Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.hmap (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3831910Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3833110Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.hmap
+2026-04-23T15:26:13.3836780Z 
+2026-04-23T15:26:13.3837610Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.DependencyStaticMetadataFileList (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3839860Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3841180Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.DependencyStaticMetadataFileList
+2026-04-23T15:26:13.3841870Z 
+2026-04-23T15:26:13.3842630Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.DependencyMetadataFileList (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3844220Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3845150Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.DependencyMetadataFileList
+2026-04-23T15:26:13.3845850Z 
+2026-04-23T15:26:13.3846690Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-non-framework-target-headers.hmap (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3848920Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3849880Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-non-framework-target-headers.hmap
+2026-04-23T15:26:13.3850920Z 
+2026-04-23T15:26:13.3851660Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/Entitlements.plist (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3852500Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3855860Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/Entitlements.plist
+2026-04-23T15:26:13.3856450Z 
+2026-04-23T15:26:13.3857290Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-project-headers.hmap (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3858350Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3859090Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-project-headers.hmap
+2026-04-23T15:26:13.3859800Z 
+2026-04-23T15:26:13.3860790Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-target-headers.hmap (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3861770Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3862560Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-target-headers.hmap
+2026-04-23T15:26:13.3863280Z 
+2026-04-23T15:26:13.3864200Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-own-target-headers.hmap (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3865250Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3866530Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-own-target-headers.hmap
+2026-04-23T15:26:13.3867170Z 
+2026-04-23T15:26:13.3867910Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-generated-files.hmap (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3868940Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3869840Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-generated-files.hmap
+2026-04-23T15:26:13.3870560Z 
+2026-04-23T15:26:13.3871370Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.SwiftFileList (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3872300Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3874860Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.SwiftFileList
+2026-04-23T15:26:13.3875660Z 
+2026-04-23T15:26:13.3876460Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper_const_extract_protocols.json (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3877420Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3878280Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper_const_extract_protocols.json
+2026-04-23T15:26:13.3878870Z 
+2026-04-23T15:26:13.3879630Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.LinkFileList (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3880640Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3881680Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.LinkFileList
+2026-04-23T15:26:13.3882450Z 
+2026-04-23T15:26:13.3883150Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper-OutputFileMap.json (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3884400Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3885190Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper-OutputFileMap.json
+2026-04-23T15:26:13.3885760Z 
+2026-04-23T15:26:13.3886380Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/empty-AuraWind.plist (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3887110Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3887670Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/empty-AuraWind.plist
+2026-04-23T15:26:13.3888190Z 
+2026-04-23T15:26:13.3888900Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind_const_extract_protocols.json (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3890140Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3890830Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind_const_extract_protocols.json
+2026-04-23T15:26:13.3891470Z 
+2026-04-23T15:26:13.3892110Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.SwiftFileList (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3892930Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3893560Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.SwiftFileList
+2026-04-23T15:26:13.3894090Z 
+2026-04-23T15:26:13.3894820Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.SwiftConstValuesFileList (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3895650Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3896340Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.SwiftConstValuesFileList
+2026-04-23T15:26:13.3897060Z 
+2026-04-23T15:26:13.3897700Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.LinkFileList (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3898470Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3899170Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.LinkFileList
+2026-04-23T15:26:13.3899690Z 
+2026-04-23T15:26:13.3901910Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind-OutputFileMap.json (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3902770Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3903420Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind-OutputFileMap.json
+2026-04-23T15:26:13.3903960Z 
+2026-04-23T15:26:13.3904550Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/Entitlements.plist (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3905340Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3927170Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/Entitlements.plist
+2026-04-23T15:26:13.3927780Z 
+2026-04-23T15:26:13.3928380Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.hmap (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3929150Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3929680Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.hmap
+2026-04-23T15:26:13.3930130Z 
+2026-04-23T15:26:13.3930740Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-project-headers.hmap (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3931530Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3932590Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-project-headers.hmap
+2026-04-23T15:26:13.3933360Z 
+2026-04-23T15:26:13.3933950Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-own-target-headers.hmap (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3934820Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3935430Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-own-target-headers.hmap
+2026-04-23T15:26:13.3935980Z 
+2026-04-23T15:26:13.3936560Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-generated-files.hmap (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3937420Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3938050Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-generated-files.hmap
+2026-04-23T15:26:13.3938640Z 
+2026-04-23T15:26:13.3939220Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-target-headers.hmap (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3940260Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3940860Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-target-headers.hmap
+2026-04-23T15:26:13.3941380Z 
+2026-04-23T15:26:13.3942020Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-non-framework-target-headers.hmap (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3942970Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3943650Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-non-framework-target-headers.hmap
+2026-04-23T15:26:13.3944380Z 
+2026-04-23T15:26:13.3944780Z MkDir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3945370Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3945870Z     /bin/mkdir -p /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources
+2026-04-23T15:26:13.3946250Z 
+2026-04-23T15:26:13.3946590Z MkDir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3947110Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3947550Z     /bin/mkdir -p /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app
+2026-04-23T15:26:13.3947930Z 
+2026-04-23T15:26:13.3948540Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.DependencyStaticMetadataFileList (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3949380Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3950030Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.DependencyStaticMetadataFileList
+2026-04-23T15:26:13.3950610Z 
+2026-04-23T15:26:13.3951230Z WriteAuxiliaryFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.DependencyMetadataFileList (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3952010Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3953000Z     write-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.DependencyMetadataFileList
+2026-04-23T15:26:13.3953530Z 
+2026-04-23T15:26:13.3954000Z MkDir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/MacOS (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3954570Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3955000Z     /bin/mkdir -p /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/MacOS
+2026-04-23T15:26:13.3955360Z 
+2026-04-23T15:26:13.3955800Z MkDir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:13.3956380Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3956850Z     /bin/mkdir -p /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents
+2026-04-23T15:26:13.3957250Z 
+2026-04-23T15:26:13.3957870Z ProcessProductPackaging "" /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3958720Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3958900Z     
+2026-04-23T15:26:13.3959010Z     Entitlements:
+2026-04-23T15:26:13.3959190Z     
+2026-04-23T15:26:13.3959350Z     {
+2026-04-23T15:26:13.3959520Z     "com.apple.application-identifier" = "C82H85XBX7.";
+2026-04-23T15:26:13.3959800Z     "com.apple.security.get-task-allow" = 1;
+2026-04-23T15:26:13.3960100Z }
+2026-04-23T15:26:13.3960280Z     
+2026-04-23T15:26:13.3961170Z     builtin-productPackagingUtility -entitlements -format xml -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent
+2026-04-23T15:26:13.3961910Z 
+2026-04-23T15:26:13.3963120Z ProcessProductPackagingDER /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent.der (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3964380Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3965720Z     /usr/bin/derq query -f xml -i /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent.der --raw
+2026-04-23T15:26:13.3966800Z 
+2026-04-23T15:26:13.3967140Z SwiftDriver SMCHelper normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.3967660Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.3980900Z     builtin-SwiftDriver -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name com_aurawind_AuraWind_SMCHelper -O -whole-module-optimization -enforce-exclusivity\=checked @/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.SwiftFileList -enable-bare-slash-regex -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -target arm64-apple-macos15.6 -g -module-cache-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache -output-file-map /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-generated-files.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-own-target-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-project-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/include -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper-Swift.h -working-directory /Users/runner/work/AuraWind/AuraWind -no-emit-module-separately-wmo
+2026-04-23T15:26:13.7369410Z 
+2026-04-23T15:26:13.7386560Z SwiftCompile normal arm64 Compiling\ SMCConnection.swift,\ HelperToolProtocol.swift,\ main.swift,\ AuraWindError.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCConnection.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolProtocol.swift /Users/runner/work/AuraWind/AuraWind/SMCHelper/main.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/AuraWindError.swift (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.9706940Z 
+2026-04-23T15:26:13.9707490Z CompileSwift normal arm64 (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:13.9707910Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:13.9708180Z     
+2026-04-23T15:26:19.4491490Z 
+2026-04-23T15:26:19.4548660Z SwiftDriver\ Compilation SMCHelper normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4551480Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4566070Z     builtin-Swift-Compilation -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name com_aurawind_AuraWind_SMCHelper -O -whole-module-optimization -enforce-exclusivity\=checked @/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.SwiftFileList -enable-bare-slash-regex -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -target arm64-apple-macos15.6 -g -module-cache-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache -output-file-map /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-generated-files.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-own-target-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-project-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/include -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper-Swift.h -working-directory /Users/runner/work/AuraWind/AuraWind -no-emit-module-separately-wmo
+2026-04-23T15:26:19.4587690Z 
+2026-04-23T15:26:19.4588590Z SwiftDriverJobDiscovery normal arm64 Compiling SMCConnection.swift, HelperToolProtocol.swift, main.swift, AuraWindError.swift (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4605740Z 
+2026-04-23T15:26:19.4606230Z SwiftDriver\ Compilation\ Requirements SMCHelper normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4606800Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4623740Z     builtin-Swift-Compilation-Requirements -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name com_aurawind_AuraWind_SMCHelper -O -whole-module-optimization -enforce-exclusivity\=checked @/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.SwiftFileList -enable-bare-slash-regex -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -target arm64-apple-macos15.6 -g -module-cache-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache -output-file-map /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/SMCHelper_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-generated-files.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-own-target-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper-project-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/include -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper-Swift.h -working-directory /Users/runner/work/AuraWind/AuraWind -no-emit-module-separately-wmo
+2026-04-23T15:26:19.4643200Z 
+2026-04-23T15:26:19.4644450Z SwiftMergeGeneratedHeaders /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/com_aurawind_AuraWind_SMCHelper-Swift.h /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper-Swift.h (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4645900Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4647350Z     builtin-swiftHeaderTool -arch arm64 /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper-Swift.h -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/DerivedSources/com_aurawind_AuraWind_SMCHelper-Swift.h
+2026-04-23T15:26:19.4648640Z 
+2026-04-23T15:26:19.4649700Z Copy /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/arm64-apple-macos.swiftdoc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftdoc (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4651040Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4652410Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftdoc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/arm64-apple-macos.swiftdoc
+2026-04-23T15:26:19.4687720Z 
+2026-04-23T15:26:19.4689140Z Copy /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/arm64-apple-macos.swiftmodule /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftmodule (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4690600Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4692080Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftmodule /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/arm64-apple-macos.swiftmodule
+2026-04-23T15:26:19.4735850Z 
+2026-04-23T15:26:19.4744390Z Copy /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/arm64-apple-macos.abi.json /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.abi.json (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4746910Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4751170Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.abi.json /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/arm64-apple-macos.abi.json
+2026-04-23T15:26:19.4846880Z 
+2026-04-23T15:26:19.4848410Z Copy /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftsourceinfo (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4849920Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4851480Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftsourceinfo /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com_aurawind_AuraWind_SMCHelper.swiftmodule/Project/arm64-apple-macos.swiftsourceinfo
+2026-04-23T15:26:19.4973180Z 
+2026-04-23T15:26:19.4975510Z Ld /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper normal (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:19.4976300Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:19.4981810Z     /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-macos15.6 -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -Os -L/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Release -L/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Release -F/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -filelist /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper.LinkFileList -Xlinker -object_path_lto -Xlinker /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper_lto.o -Xlinker -dependency_info -Xlinker /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com.aurawind.AuraWind.SMCHelper_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/Objects-normal/arm64/com_aurawind_AuraWind_SMCHelper.swiftmodule -framework ServiceManagement -framework Security -framework IOKit -Xlinker -no_adhoc_codesign -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper
+2026-04-23T15:26:21.6044590Z 
+2026-04-23T15:26:21.6149130Z ProcessProductPackaging "" /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.app.xcent (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:21.6150090Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:21.6251560Z     
+2026-04-23T15:26:21.6364010Z     Entitlements:
+2026-04-23T15:26:21.6364320Z     
+2026-04-23T15:26:21.6468230Z     {
+2026-04-23T15:26:21.6589610Z     "com.apple.security.get-task-allow" = 1;
+2026-04-23T15:26:21.6698780Z }
+2026-04-23T15:26:21.6863390Z     
+2026-04-23T15:26:21.6977330Z     builtin-productPackagingUtility -entitlements -format xml -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.app.xcent
+2026-04-23T15:26:21.7070800Z 
+2026-04-23T15:26:21.7185720Z ProcessProductPackagingDER /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.app.xcent /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.app.xcent.der (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:21.7294180Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:21.7396290Z     /usr/bin/derq query -f xml -i /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.app.xcent -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind.app.xcent.der --raw
+2026-04-23T15:26:21.7498040Z 
+2026-04-23T15:26:21.7602450Z MkDir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/unthinned (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:21.8009380Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:21.8154780Z     /bin/mkdir -p /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/unthinned
+2026-04-23T15:26:21.8271200Z 
+2026-04-23T15:26:21.8373550Z MkDir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/thinned (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:21.8485550Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:21.8633740Z     /bin/mkdir -p /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/thinned
+2026-04-23T15:26:21.8757300Z 
+2026-04-23T15:26:21.8954990Z GenerateAssetSymbols /Users/runner/work/AuraWind/AuraWind/AuraWind/Assets.xcassets (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:21.9089850Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:21.9292940Z     /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool /Users/runner/work/AuraWind/AuraWind/AuraWind/Assets.xcassets --compile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_dependencies --output-partial-info-plist /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist --app-icon AppIcon --accent-color AccentColor --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 15.6 --platform macosx --bundle-identifier com.lingfeng.AuraWind.AuraWind --generate-swift-asset-symbols /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+2026-04-23T15:26:21.9436290Z /* com.apple.actool.compilation-results */
+2026-04-23T15:26:21.9862750Z /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+2026-04-23T15:26:22.0183800Z /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.h
+2026-04-23T15:26:22.0185350Z /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.swift
+2026-04-23T15:26:22.0336970Z 
+2026-04-23T15:26:22.0536760Z 
+2026-04-23T15:26:22.0602920Z CompileAssetCatalogVariant thinned /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources /Users/runner/work/AuraWind/AuraWind/AuraWind/Assets.xcassets (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:22.0618540Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:22.0624520Z     /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool /Users/runner/work/AuraWind/AuraWind/AuraWind/Assets.xcassets --compile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --accent-color AccentColor --enable-on-demand-resources NO --development-region en --target-device mac --minimum-deployment-target 15.6 --platform macosx
+2026-04-23T15:26:27.2653970Z 2026-04-23 15:26:25.600 ibtoold[1683:8191] NSFileCoordinator is doing nothing.
+2026-04-23T15:26:27.2703480Z /* com.apple.actool.document.warnings */
+2026-04-23T15:26:27.2710790Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Assets.xcassets:.: warning: The minimum deployment target is set to 15.6, but the platform only knows how to compile for macOS 15.5
+2026-04-23T15:26:27.2714270Z /* com.apple.actool.compilation-results */
+2026-04-23T15:26:27.2741170Z /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist_thinned
+2026-04-23T15:26:27.2746970Z /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/thinned/AppIcon.icns
+2026-04-23T15:26:27.2750360Z /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/thinned/Assets.car
+2026-04-23T15:26:27.2755620Z 
+2026-04-23T15:26:27.2759050Z 
+2026-04-23T15:26:27.2762410Z SwiftDriver AuraWind normal arm64 com.apple.xcode.tools.swift.compiler (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:27.2766450Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:27.2783880Z     builtin-SwiftDriver -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name AuraWind -O -whole-module-optimization -enforce-exclusivity\=checked @/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.SwiftFileList -enable-bare-slash-regex -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -target arm64-apple-macos15.6 -g -module-cache-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -emit-localized-strings -emit-localized-strings-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64 -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache -output-file-map /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-generated-files.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-own-target-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-project-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/include -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind-Swift.h -working-directory /Users/runner/work/AuraWind/AuraWind -no-emit-module-separately-wmo
+2026-04-23T15:26:27.2798910Z 
+2026-04-23T15:26:27.2814430Z SwiftCompile normal arm64 Compiling\ TemperatureChartView.swift,\ TemperatureSensor.swift,\ SMCServiceProtocol.swift,\ CustomSidebar.swift,\ ChartExportViewModel.swift,\ FanListView.swift,\ CurveProfile.swift,\ SMCPerformanceOptimizer.swift,\ Constants.swift,\ YAxisRangeEditor.swift,\ AuraWindApp.swift,\ ChartExportService.swift,\ Color+Theme.swift,\ SMCPermissionView.swift,\ SettingsView.swift,\ SystemInfoService.swift,\ FanSpeedChart.swift,\ FanControlViewModel.swift,\ PerformanceMonitorView.swift,\ Fan.swift,\ SMCService.swift,\ ChartExportButton.swift,\ BaseViewModel.swift,\ DashboardView.swift,\ ChartDataPoint.swift,\ SMCConnection.swift,\ View+Modifiers.swift,\ TemperatureLineChart.swift,\ BlurGlassCard.swift,\ HelperToolProtocol.swift,\ PerformanceMonitor.swift,\ TemperatureMonitorViewModel.swift,\ SMCServiceWithHelper.swift,\ DataAnnotationView.swift,\ ChartRangeManager.swift,\ MainView.swift,\ DataAnnotation.swift,\ SMCPermissionManager.swift,\ ContentView.swift,\ AuraWindError.swift,\ PersistenceService.swift,\ View+Background.swift,\ TemperatureFanChart.swift,\ HelperToolManager.swift,\ PerformanceChart.swift,\ PerformanceMonitorViewModel.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/TemperatureChartView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/TemperatureSensor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceProtocol.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/CustomSidebar.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/ChartExportViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/FanListView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/CurveProfile.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCPerformanceOptimizer.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Constants.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/YAxisRangeEditor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/AuraWindApp.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/ChartExportService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/Color+Theme.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/SMCPermissionView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Settings/SettingsView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SystemInfoService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/FanSpeedChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/FanControlViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/PerformanceMonitorView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/Fan.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/BaseViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/DashboardView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/ChartDataPoint.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCConnection.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/View+Modifiers.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/TemperatureLineChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/BlurGlassCard.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolProtocol.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/PerformanceMonitor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/TemperatureMonitorViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceWithHelper.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/DataAnnotationView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/ChartRangeManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/MainView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/DataAnnotation.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCPermissionManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ContentView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/AuraWindError.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/PersistenceService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/View+Background.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/TemperatureFanChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/PerformanceChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/PerformanceMonitorViewModel.swift /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:27.2829880Z CompileSwift normal arm64 (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:27.2830250Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:27.2830620Z     
+2026-04-23T15:26:33.7542150Z /Users/runner/work/AuraWind/AuraWind/AuraWind/AuraWindApp.swift:424:22: warning: 'onChange(of:perform:)' was deprecated in macOS 14.0: Use `onChange` with a two or zero parameter action closure instead.
+2026-04-23T15:26:33.7563460Z                     .onChange(of: manualRPMInput) { _ in
+2026-04-23T15:26:33.7563840Z                      ^
+2026-04-23T15:26:33.7564720Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:58:22: warning: main actor-isolated property 'isConnected' cannot be used to satisfy nonisolated requirement from protocol 'SMCServiceProtocol'; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7566010Z     private(set) var isConnected: Bool = false
+2026-04-23T15:26:33.7571260Z                      ^
+2026-04-23T15:26:33.7571930Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:14:25: note: add '@preconcurrency' to the 'SMCServiceProtocol' conformance to defer isolation checking to run time
+2026-04-23T15:26:33.7572700Z final class SMCService: SMCServiceProtocol {
+2026-04-23T15:26:33.7573030Z                         ^
+2026-04-23T15:26:33.7573290Z                         @preconcurrency 
+2026-04-23T15:26:33.7573910Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceProtocol.swift:21:9: note: requirement 'isConnected' declared here
+2026-04-23T15:26:33.7574460Z     var isConnected: Bool { get }
+2026-04-23T15:26:33.7574710Z         ^
+2026-04-23T15:26:33.7575470Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:398:47: warning: main actor-isolated property 'connection' can not be referenced from a Sendable closure; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7576300Z                 let capturedConnection = self.connection
+2026-04-23T15:26:33.7576620Z                                               ^
+2026-04-23T15:26:33.7577090Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:55:17: note: property declared here
+2026-04-23T15:26:33.7577680Z     private var connection: io_connect_t = 0
+2026-04-23T15:26:33.7577970Z                 ^
+2026-04-23T15:26:33.7578690Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:444:25: warning: main actor-isolated property 'useRealSMC' can not be referenced from a Sendable closure; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7579520Z                 if self.useRealSMC {
+2026-04-23T15:26:33.7579780Z                         ^
+2026-04-23T15:26:33.7580200Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:25:17: note: property declared here
+2026-04-23T15:26:33.7580770Z     private var useRealSMC: Bool = false
+2026-04-23T15:26:33.7581040Z                 ^
+2026-04-23T15:26:33.7581860Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:452:51: warning: call to main actor-isolated instance method 'convertToConnectionType' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7582810Z                         let connectionType = self.convertToConnectionType(type)
+2026-04-23T15:26:33.7583190Z                                                   ^
+2026-04-23T15:26:33.7583990Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:566:18: note: calls to instance method 'convertToConnectionType' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7585130Z     private func convertToConnectionType(_ type: SMCDataType) -> SMCConnection.SMCDataType {
+2026-04-23T15:26:33.7585570Z                  ^
+2026-04-23T15:26:33.7586450Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:458:33: warning: main actor-isolated property 'permissionManager' can not be referenced from a Sendable closure; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7587340Z                         if self.permissionManager.handleSMCError(error) {
+2026-04-23T15:26:33.7587680Z                                 ^
+2026-04-23T15:26:33.7588190Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:19:17: note: property declared here
+2026-04-23T15:26:33.7589340Z     private let permissionManager = SMCPermissionManager()
+2026-04-23T15:26:33.7589780Z                 ^
+2026-04-23T15:26:33.7590750Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:465:59: warning: call to main actor-isolated instance method 'convertToConnectionType' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7591740Z                                 let connectionType = self.convertToConnectionType(type)
+2026-04-23T15:26:33.7592150Z                                                           ^
+2026-04-23T15:26:33.7592900Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:566:18: note: calls to instance method 'convertToConnectionType' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7593810Z     private func convertToConnectionType(_ type: SMCDataType) -> SMCConnection.SMCDataType {
+2026-04-23T15:26:33.7594370Z                  ^
+2026-04-23T15:26:33.7595200Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:471:52: warning: call to main actor-isolated instance method 'mockSMCRead(key:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7596110Z                                 value = (try? self.mockSMCRead(key: key, type: type)) ?? 0.0
+2026-04-23T15:26:33.7596640Z                                                    ^
+2026-04-23T15:26:33.7597420Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:580:18: note: calls to instance method 'mockSMCRead(key:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7598290Z     private func mockSMCRead(key: String, type: SMCDataType) throws -> Double {
+2026-04-23T15:26:33.7598800Z                  ^
+2026-04-23T15:26:33.7599640Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:476:48: warning: call to main actor-isolated instance method 'mockSMCRead(key:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7600690Z                             value = (try? self.mockSMCRead(key: key, type: type)) ?? 0.0
+2026-04-23T15:26:33.7601170Z                                                ^
+2026-04-23T15:26:33.7601880Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:580:18: note: calls to instance method 'mockSMCRead(key:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7604190Z     private func mockSMCRead(key: String, type: SMCDataType) throws -> Double {
+2026-04-23T15:26:33.7623370Z                  ^
+2026-04-23T15:26:33.7624510Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:481:40: warning: call to main actor-isolated instance method 'mockSMCRead(key:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7625600Z                     value = (try? self.mockSMCRead(key: key, type: type)) ?? 0.0
+2026-04-23T15:26:33.7626030Z                                        ^
+2026-04-23T15:26:33.7626730Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:580:18: note: calls to instance method 'mockSMCRead(key:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7627530Z     private func mockSMCRead(key: String, type: SMCDataType) throws -> Double {
+2026-04-23T15:26:33.7627950Z                  ^
+2026-04-23T15:26:33.7628680Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:505:29: warning: main actor-isolated property 'useRealSMC' can not be referenced from a Sendable closure; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7629450Z                     if self.useRealSMC {
+2026-04-23T15:26:33.7629780Z                             ^
+2026-04-23T15:26:33.7630300Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:25:17: note: property declared here
+2026-04-23T15:26:33.7631300Z     private var useRealSMC: Bool = false
+2026-04-23T15:26:33.7631700Z                 ^
+2026-04-23T15:26:33.7632530Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:507:38: warning: call to main actor-isolated instance method 'performRealSMCWrite(key:value:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7633540Z                             try self.performRealSMCWrite(key: key, value: value, type: type)
+2026-04-23T15:26:33.7634080Z                                      ^
+2026-04-23T15:26:33.7634820Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:554:18: note: calls to instance method 'performRealSMCWrite(key:value:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7635690Z     private func performRealSMCWrite(key: String, value: Double, type: SMCDataType) throws {
+2026-04-23T15:26:33.7636170Z                  ^
+2026-04-23T15:26:33.7636920Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:511:37: warning: main actor-isolated property 'permissionManager' can not be referenced from a Sendable closure; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7637800Z                             if self.permissionManager.handleSMCError(error) {
+2026-04-23T15:26:33.7638190Z                                     ^
+2026-04-23T15:26:33.7638700Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:19:17: note: property declared here
+2026-04-23T15:26:33.7639320Z     private let permissionManager = SMCPermissionManager()
+2026-04-23T15:26:33.7639660Z                 ^
+2026-04-23T15:26:33.7640580Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:514:46: warning: call to main actor-isolated instance method 'performRealSMCWrite(key:value:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7641660Z                                     try self.performRealSMCWrite(key: key, value: value, type: type)
+2026-04-23T15:26:33.7642200Z                                              ^
+2026-04-23T15:26:33.7643080Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:554:18: note: calls to instance method 'performRealSMCWrite(key:value:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7644150Z     private func performRealSMCWrite(key: String, value: Double, type: SMCDataType) throws {
+2026-04-23T15:26:33.7645010Z                  ^
+2026-04-23T15:26:33.7651840Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:518:46: warning: call to main actor-isolated instance method 'mockSMCWrite(key:value:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7653270Z                                     try self.mockSMCWrite(key: key, value: value, type: type)
+2026-04-23T15:26:33.7654530Z                                              ^
+2026-04-23T15:26:33.7655490Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:610:18: note: calls to instance method 'mockSMCWrite(key:value:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7656580Z     private func mockSMCWrite(key: String, value: Double, type: SMCDataType) throws {
+2026-04-23T15:26:33.7657380Z                  ^
+2026-04-23T15:26:33.7658470Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:523:42: warning: call to main actor-isolated instance method 'mockSMCWrite(key:value:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7659640Z                                 try self.mockSMCWrite(key: key, value: value, type: type)
+2026-04-23T15:26:33.7660750Z                                          ^
+2026-04-23T15:26:33.7662070Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:610:18: note: calls to instance method 'mockSMCWrite(key:value:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7663630Z     private func mockSMCWrite(key: String, value: Double, type: SMCDataType) throws {
+2026-04-23T15:26:33.7664970Z                  ^
+2026-04-23T15:26:33.7666100Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:528:34: warning: call to main actor-isolated instance method 'mockSMCWrite(key:value:type:)' in a synchronous nonisolated context; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7667240Z                         try self.mockSMCWrite(key: key, value: value, type: type)
+2026-04-23T15:26:33.7668240Z                                  ^
+2026-04-23T15:26:33.7669150Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift:610:18: note: calls to instance method 'mockSMCWrite(key:value:type:)' from outside of its actor context are implicitly asynchronous
+2026-04-23T15:26:33.7670370Z     private func mockSMCWrite(key: String, value: Double, type: SMCDataType) throws {
+2026-04-23T15:26:33.7671060Z                  ^
+2026-04-23T15:26:33.7671940Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:121:9: warning: result of 'Button<Label>' initializer is unused
+2026-04-23T15:26:33.7672740Z         Button {
+2026-04-23T15:26:33.7673520Z         ^      ~
+2026-04-23T15:26:33.7674420Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:127:9: warning: result of 'Divider' initializer is unused
+2026-04-23T15:26:33.7675420Z         Divider()
+2026-04-23T15:26:33.7676310Z         ^      ~~
+2026-04-23T15:26:33.7677090Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:129:9: warning: result of 'Button<Label>' initializer is unused
+2026-04-23T15:26:33.7681580Z         Button {
+2026-04-23T15:26:33.7681930Z         ^      ~
+2026-04-23T15:26:33.7682640Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:136:13: warning: result of 'Button<Label>' initializer is unused
+2026-04-23T15:26:33.7683340Z             Button {
+2026-04-23T15:26:33.7683580Z             ^      ~
+2026-04-23T15:26:33.7684180Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:142:13: warning: result of 'Button<Label>' initializer is unused
+2026-04-23T15:26:33.7685210Z             Button {
+2026-04-23T15:26:33.7685640Z             ^      ~
+2026-04-23T15:26:33.7686160Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:150:13: warning: result of 'Divider' initializer is unused
+2026-04-23T15:26:33.7693220Z             Divider()
+2026-04-23T15:26:33.7833580Z             ^      ~~
+2026-04-23T15:26:33.7840330Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:152:13: warning: result of 'Button<Label>' initializer is unused
+2026-04-23T15:26:33.7840980Z             Button {
+2026-04-23T15:26:33.7845520Z             ^      ~
+2026-04-23T15:26:33.7846300Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift:120:46: error: function declares an opaque return type, but has no return statements in its body from which to infer an underlying type
+2026-04-23T15:26:33.7847080Z     private var exportMenuContent: some View {
+2026-04-23T15:26:33.7847350Z                                              ^
+2026-04-23T15:26:33.7848300Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceWithHelper.swift:21:22: warning: main actor-isolated property 'isConnected' cannot be used to satisfy nonisolated requirement from protocol 'SMCServiceProtocol'; this is an error in the Swift 6 language mode
+2026-04-23T15:26:33.7849270Z     private(set) var isConnected: Bool = false
+2026-04-23T15:26:33.7849680Z                      ^
+2026-04-23T15:26:33.7850760Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceWithHelper.swift:13:35: note: add '@preconcurrency' to the 'SMCServiceProtocol' conformance to defer isolation checking to run time
+2026-04-23T15:26:33.7851980Z final class SMCServiceWithHelper: SMCServiceProtocol {
+2026-04-23T15:26:33.7860110Z ** BUILD FAILED **
+2026-04-23T15:26:33.7860260Z                                   ^
+2026-04-23T15:26:33.7860490Z 
+2026-04-23T15:26:33.7860570Z                                   @preconcurrency 
+2026-04-23T15:26:33.7860810Z 
+2026-04-23T15:26:33.7861140Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceProtocol.swift:21:9: note: requirement 'isConnected' declared here
+2026-04-23T15:26:33.7861690Z The following build commands failed:
+2026-04-23T15:26:33.7861880Z     var isConnected: Bool { get }
+2026-04-23T15:26:33.7862290Z 	CompileSwift normal arm64 (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.7862550Z         ^
+2026-04-23T15:26:33.7877790Z 	SwiftCompile normal arm64 Compiling\ TemperatureChartView.swift,\ TemperatureSensor.swift,\ SMCServiceProtocol.swift,\ CustomSidebar.swift,\ ChartExportViewModel.swift,\ FanListView.swift,\ CurveProfile.swift,\ SMCPerformanceOptimizer.swift,\ Constants.swift,\ YAxisRangeEditor.swift,\ AuraWindApp.swift,\ ChartExportService.swift,\ Color+Theme.swift,\ SMCPermissionView.swift,\ SettingsView.swift,\ SystemInfoService.swift,\ FanSpeedChart.swift,\ FanControlViewModel.swift,\ PerformanceMonitorView.swift,\ Fan.swift,\ SMCService.swift,\ ChartExportButton.swift,\ BaseViewModel.swift,\ DashboardView.swift,\ ChartDataPoint.swift,\ SMCConnection.swift,\ View+Modifiers.swift,\ TemperatureLineChart.swift,\ BlurGlassCard.swift,\ HelperToolProtocol.swift,\ PerformanceMonitor.swift,\ TemperatureMonitorViewModel.swift,\ SMCServiceWithHelper.swift,\ DataAnnotationView.swift,\ ChartRangeManager.swift,\ MainView.swift,\ DataAnnotation.swift,\ SMCPermissionManager.swift,\ ContentView.swift,\ AuraWindError.swift,\ PersistenceService.swift,\ View+Background.swift,\ TemperatureFanChart.swift,\ HelperToolManager.swift,\ PerformanceChart.swift,\ PerformanceMonitorViewModel.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/TemperatureChartView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/TemperatureSensor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceProtocol.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/CustomSidebar.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/ChartExportViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/FanListView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/CurveProfile.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCPerformanceOptimizer.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Constants.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/YAxisRangeEditor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/AuraWindApp.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/ChartExportService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/Color+Theme.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/SMCPermissionView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Settings/SettingsView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SystemInfoService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/FanSpeedChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/FanControlViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/PerformanceMonitorView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/Fan.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/BaseViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/DashboardView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/ChartDataPoint.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCConnection.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/View+Modifiers.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/TemperatureLineChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/BlurGlassCard.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolProtocol.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/PerformanceMonitor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/TemperatureMonitorViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceWithHelper.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/DataAnnotationView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/ChartRangeManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/MainView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/DataAnnotation.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCPermissionManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ContentView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/AuraWindError.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/PersistenceService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/View+Background.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/TemperatureFanChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/PerformanceChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/PerformanceMonitorViewModel.swift /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.7894550Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:89:19: warning: cannot pass 'String' to parameter; argument 'name' must be a pointer that outlives the call to 'init(name:valueLength:value:flags:)'
+2026-04-23T15:26:33.7899530Z 	Building project AuraWind with scheme AuraWind and configuration Release
+2026-04-23T15:26:33.7899920Z             name: kSMRightBlessPrivilegedHelper,
+2026-04-23T15:26:33.7902040Z (3 failures)
+2026-04-23T15:26:33.7902240Z                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-04-23T15:26:33.7903460Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:89:19: note: implicit argument conversion from 'String' to 'AuthorizationString' (aka 'UnsafePointer<Int8>') produces a pointer valid only for the duration of the call to 'init(name:valueLength:value:flags:)'
+2026-04-23T15:26:33.7904570Z             name: kSMRightBlessPrivilegedHelper,
+2026-04-23T15:26:33.7904920Z                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-04-23T15:26:33.7905820Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:89:19: note: use the 'withCString' method on String in order to explicitly convert argument to pointer valid for a defined scope
+2026-04-23T15:26:33.7906700Z             name: kSMRightBlessPrivilegedHelper,
+2026-04-23T15:26:33.7907050Z                   ^
+2026-04-23T15:26:33.7907930Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:95:63: warning: cannot use inout expression here; argument 'items' must be a pointer that outlives the call to 'init(count:items:)'
+2026-04-23T15:26:33.7908880Z         var authRights = AuthorizationRights(count: 1, items: &authItem)
+2026-04-23T15:26:33.7909310Z                                                               ^~~~~~~~~
+2026-04-23T15:26:33.7910450Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:95:63: note: implicit argument conversion from 'AuthorizationItem' to 'UnsafeMutablePointer<AuthorizationItem>?' produces a pointer valid only for the duration of the call to 'init(count:items:)'
+2026-04-23T15:26:33.7911660Z         var authRights = AuthorizationRights(count: 1, items: &authItem)
+2026-04-23T15:26:33.7912330Z                                                               ^~~~~~~~~
+2026-04-23T15:26:33.7913270Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:95:63: note: use 'withUnsafeMutablePointer' in order to explicitly convert argument to pointer valid for a defined scope
+2026-04-23T15:26:33.7949290Z         var authRights = AuthorizationRights(count: 1, items: &authItem)
+2026-04-23T15:26:33.7949780Z                                                               ^
+2026-04-23T15:26:33.7950560Z /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift:110:23: warning: 'SMJobBless' was deprecated in macOS 13.0: Please use SMAppService instead
+2026-04-23T15:26:33.7951370Z         let success = SMJobBless(
+2026-04-23T15:26:33.7951780Z                       ^
+2026-04-23T15:26:33.7952000Z 
+2026-04-23T15:26:33.7952170Z Failed frontend command:
+2026-04-23T15:26:33.8031720Z /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/TemperatureChartView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/TemperatureSensor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceProtocol.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/CustomSidebar.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/ChartExportViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/FanListView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/CurveProfile.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCPerformanceOptimizer.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Constants.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/YAxisRangeEditor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/AuraWindApp.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/ChartExportService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/Color+Theme.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/SMCPermissionView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Settings/SettingsView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SystemInfoService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/FanSpeedChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/FanControlViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/PerformanceMonitorView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/Fan.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/ChartExportButton.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/BaseViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/DashboardView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/ChartDataPoint.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCConnection.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/View+Modifiers.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/TemperatureLineChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/BlurGlassCard.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolProtocol.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/PerformanceMonitor.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/TemperatureMonitorViewModel.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCServiceWithHelper.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/DataAnnotationView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/ChartRangeManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Main/MainView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/DataAnnotation.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/SMCPermissionManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ContentView.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Models/AuraWindError.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/PersistenceService.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Utils/Extensions/View+Background.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/TemperatureFanChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Services/HelperTool/HelperToolManager.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/Views/Components/PerformanceChart.swift /Users/runner/work/AuraWind/AuraWind/AuraWind/ViewModels/PerformanceMonitorViewModel.swift /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/supplementaryOutputs-2 -emit-localized-strings -emit-localized-strings-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64 -target arm64-apple-macos15.6 -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -I /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -no-color-diagnostics -g -debug-info-format\=dwarf -dwarf-version\=5 -module-cache-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex -swift-version 5 -enforce-exclusivity\=checked -O -serialize-debugging-options -const-gather-protocols-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind_const_extract_protocols.json -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/runner/work/AuraWind/AuraWind -resource-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift -file-compilation-dir /Users/runner/work/AuraWind/AuraWind -Xcc -ivfsstatcache -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-generated-files.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-own-target-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-project-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/include -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources -module-name AuraWind -frontend-parseable-output -disable-clang-spi -target-sdk-version 15.5 -target-sdk-name macosx15.5 -external-plugin-path /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins\#/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server -external-plugin-path /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/local/lib/swift/host/plugins\#/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server -in-process-plugin-server-path /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -plugin-path /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins -plugin-path /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/lib/swift/host/plugins -enable-default-cmo -num-threads 3 -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureChartView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureSensor.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCServiceProtocol.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/CustomSidebar.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartExportViewModel.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/FanListView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/CurveProfile.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCPerformanceOptimizer.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/Constants.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/YAxisRangeEditor.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWindApp.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartExportService.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/Color+Theme.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCPermissionView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SettingsView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SystemInfoService.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/FanSpeedChart.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/FanControlViewModel.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceMonitorView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/Fan.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCService.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartExportButton.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/BaseViewModel.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/DashboardView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartDataPoint.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCConnection.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/View+Modifiers.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureLineChart.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/BlurGlassCard.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/HelperToolProtocol.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceMonitor.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureMonitorViewModel.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCServiceWithHelper.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/DataAnnotationView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartRangeManager.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/MainView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/DataAnnotation.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCPermissionManager.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ContentView.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWindError.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PersistenceService.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/View+Background.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureFanChart.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/HelperToolManager.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceChart.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceMonitorViewModel.o -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/GeneratedAssetSymbols.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureChartView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureSensor.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCServiceProtocol.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/CustomSidebar.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartExportViewModel.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/FanListView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/CurveProfile.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCPerformanceOptimizer.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/Constants.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/YAxisRangeEditor.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWindApp.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartExportService.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/Color+Theme.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCPermissionView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SettingsView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SystemInfoService.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/FanSpeedChart.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/FanControlViewModel.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceMonitorView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/Fan.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCService.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartExportButton.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/BaseViewModel.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/DashboardView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartDataPoint.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCConnection.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/View+Modifiers.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureLineChart.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/BlurGlassCard.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/HelperToolProtocol.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceMonitor.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureMonitorViewModel.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCServiceWithHelper.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/DataAnnotationView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ChartRangeManager.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/MainView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/DataAnnotation.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/SMCPermissionManager.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/ContentView.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWindError.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PersistenceService.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/View+Background.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/TemperatureFanChart.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/HelperToolManager.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceChart.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/PerformanceMonitorViewModel.o -index-unit-output-path /AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/GeneratedAssetSymbols.o
+2026-04-23T15:26:33.8097080Z SwiftDriver\ Compilation AuraWind normal arm64 com.apple.xcode.tools.swift.compiler (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8097670Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8109710Z     builtin-Swift-Compilation -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name AuraWind -O -whole-module-optimization -enforce-exclusivity\=checked @/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.SwiftFileList -enable-bare-slash-regex -enable-upcoming-feature MemberImportVisibility -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk -target arm64-apple-macos15.6 -g -module-cache-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -F /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release -emit-localized-strings -emit-localized-strings-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64 -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/SDKStatCaches.noindex/macosx15.5-24F74-a403186ba963133a54a0e0cacd566b0b.sdkstatcache -output-file-map /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/AuraWind/AuraWind/build/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-generated-files.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-own-target-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/AuraWind-project-headers.hmap -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/include -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/Objects-normal/arm64/AuraWind-Swift.h -working-directory /Users/runner/work/AuraWind/AuraWind -no-emit-module-separately-wmo
+2026-04-23T15:26:33.8121800Z 
+2026-04-23T15:26:33.8122620Z GenerateDSYMFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper.dSYM /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:33.8124000Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8125110Z     /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper.dSYM
+2026-04-23T15:26:33.8126220Z 
+2026-04-23T15:26:33.8126650Z CodeSign /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:33.8127380Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8127600Z     
+2026-04-23T15:26:33.8127790Z     Signing Identity:     "Sign to Run Locally"
+2026-04-23T15:26:33.8127970Z     
+2026-04-23T15:26:33.8129180Z     /usr/bin/codesign --force --sign - -o runtime --entitlements /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/SMCHelper.build/com.aurawind.AuraWind.SMCHelper.xcent --timestamp\=none --generate-entitlement-der /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper
+2026-04-23T15:26:33.8130390Z 
+2026-04-23T15:26:33.8131020Z RegisterExecutionPolicyException /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:33.8131710Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8132400Z     builtin-RegisterExecutionPolicyException /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/com.aurawind.AuraWind.SMCHelper
+2026-04-23T15:26:33.8132920Z 
+2026-04-23T15:26:33.8133510Z TiffUtil /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/menubar.tiff (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8134120Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8135430Z     /usr/bin/tiffutil -cathidpicheck /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/menubar@2x.png /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/menubar.png /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/menubar@3x.png -out /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/menubar.tiff
+2026-04-23T15:26:33.8136930Z Warning: Sizes of concatenated images do not follow Aqua guidelines for resolution independent multi-image TIFFs.
+2026-04-23T15:26:33.8137470Z          Please provide two images, one with exactly twice the pixel width as the other.
+2026-04-23T15:26:33.8138140Z  Image 1 in file /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/menubar@2x.png: 300x298 points (300x298 pixels, 72x72 dpi)
+2026-04-23T15:26:33.8138810Z  Image 1 in file /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/menubar.png: 150x149 points (150x149 pixels, 72x72 dpi)
+2026-04-23T15:26:33.8139510Z  Image 1 in file /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/menubar@3x.png: 450x447 points (450x447 pixels, 72x72 dpi)
+2026-04-23T15:26:33.8140380Z 3 images written to /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/menubar.tiff.
+2026-04-23T15:26:33.8140830Z 
+2026-04-23T15:26:33.8142880Z CpResource /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/彩色.svg /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/彩色.svg (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8143680Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8144720Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/彩色.svg /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources
+2026-04-23T15:26:33.8145600Z 
+2026-04-23T15:26:33.8146200Z CpResource /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/fan.svg /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/fan.svg (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8147280Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8148210Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/fan.svg /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources
+2026-04-23T15:26:33.8149000Z 
+2026-04-23T15:26:33.8149740Z CopyPlistFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/Info.plist /Users/runner/work/AuraWind/AuraWind/AuraWind/Info.plist (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8150520Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8151330Z     builtin-copyPlist --outdir /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources -- /Users/runner/work/AuraWind/AuraWind/AuraWind/Info.plist
+2026-04-23T15:26:33.8151910Z 
+2026-04-23T15:26:33.8152680Z CopyPNGFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/logo_appicon_source.png /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/logo_appicon_source.png (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8153560Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8154490Z     /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/copypng /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/logo_appicon_source.png /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/logo_appicon_source.png
+2026-04-23T15:26:33.8155370Z 
+2026-04-23T15:26:33.8156010Z CopyPNGFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/logo.png /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/logo.png (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8156810Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8158020Z     /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/copypng /Users/runner/work/AuraWind/AuraWind/AuraWind/icon/logo.png /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/logo.png
+2026-04-23T15:26:33.8158830Z 
+2026-04-23T15:26:33.8159290Z LinkAssetCatalog /Users/runner/work/AuraWind/AuraWind/AuraWind/Assets.xcassets (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8159790Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8164420Z     builtin-linkAssetCatalog --thinned /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/thinned --thinned-dependencies /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist_thinned --unthinned /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_output/unthinned --unthinned-dependencies /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist_unthinned --output /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources --plist-output /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist
+2026-04-23T15:26:33.8169330Z note: Emplaced /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/AppIcon.icns (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8170370Z note: Emplaced /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Resources/Assets.car (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8171030Z 
+2026-04-23T15:26:33.8171890Z ProcessInfoPlistFile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Info.plist /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/empty-AuraWind.plist (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8172990Z     cd /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:33.8175140Z     builtin-infoPlistUtility /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/empty-AuraWind.plist -producttype com.apple.product-type.application -genpkginfo /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/PkgInfo -expandbuildsettings -platform macosx -additionalcontentfile /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Intermediates.noindex/AuraWind.build/Release/AuraWind.build/assetcatalog_generated_info.plist -o /Users/runner/work/AuraWind/AuraWind/build/DerivedData/Build/Products/Release/AuraWind.app/Contents/Info.plist
+2026-04-23T15:26:33.8177390Z 
+2026-04-23T15:26:33.8178090Z /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj: warning: The macOS deployment target 'MACOSX_DEPLOYMENT_TARGET' is set to 15.6, but the range of supported deployment target versions is 10.13 to 15.5.99. (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:33.8183230Z note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'SMCHelper' from project 'AuraWind')
+2026-04-23T15:26:33.8184470Z /Users/runner/work/AuraWind/AuraWind/AuraWind.xcodeproj: warning: The macOS deployment target 'MACOSX_DEPLOYMENT_TARGET' is set to 15.6, but the range of supported deployment target versions is 10.13 to 15.5.99. (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8186040Z note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'AuraWind' from project 'AuraWind')
+2026-04-23T15:26:33.8213160Z ##[error]Process completed with exit code 65.
+2026-04-23T15:26:33.8317130Z ##[group]Run actions/upload-artifact@v4
+2026-04-23T15:26:33.8317360Z with:
+2026-04-23T15:26:33.8317560Z   name: build-logs-21cc15450df211be3bb28f058fea2d658f93a23e
+2026-04-23T15:26:33.8317810Z   path: build/logs/xcodebuild.log
+2026-04-23T15:26:33.8317980Z   if-no-files-found: ignore
+2026-04-23T15:26:33.8318140Z   compression-level: 6
+2026-04-23T15:26:33.8318300Z   overwrite: false
+2026-04-23T15:26:33.8318440Z   include-hidden-files: false
+2026-04-23T15:26:33.8318590Z ##[endgroup]
+2026-04-23T15:26:34.2338600Z With the provided path, there will be 1 file uploaded
+2026-04-23T15:26:34.2341010Z Artifact name is valid!
+2026-04-23T15:26:34.2341670Z Root directory input is valid!
+2026-04-23T15:26:34.3727260Z Beginning upload of artifact content to blob storage
+2026-04-23T15:26:34.4186920Z Uploaded bytes 8509
+2026-04-23T15:26:34.4388050Z Finished uploading artifact content to blob storage!
+2026-04-23T15:26:34.4403300Z SHA256 digest of uploaded artifact zip is f693275baab56f9fa8fba5eb849bf3bb8747638fba33e9fc4e2b6d889c8b130f
+2026-04-23T15:26:34.4404030Z Finalizing artifact upload
+2026-04-23T15:26:34.6329240Z Artifact build-logs-21cc15450df211be3bb28f058fea2d658f93a23e.zip successfully finalized. Artifact ID 6605463768
+2026-04-23T15:26:34.6330760Z Artifact build-logs-21cc15450df211be3bb28f058fea2d658f93a23e has been successfully uploaded! Final size is 8509 bytes. Artifact ID is 6605463768
+2026-04-23T15:26:34.6355740Z Artifact download URL: https://github.com/BIBIYES/AuraWind/actions/runs/24843704978/artifacts/6605463768
+2026-04-23T15:26:34.6611340Z Post job cleanup.
+2026-04-23T15:26:34.7854360Z [command]/opt/homebrew/bin/git version
+2026-04-23T15:26:34.8288060Z git version 2.53.0
+2026-04-23T15:26:34.8311680Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/ae971206-13ef-444b-ba8f-76d616e04473/.gitconfig'
+2026-04-23T15:26:34.8319620Z Temporarily overriding HOME='/Users/runner/work/_temp/ae971206-13ef-444b-ba8f-76d616e04473' before making global git config changes
+2026-04-23T15:26:34.8320530Z Adding repository directory to the temporary git global config as a safe directory
+2026-04-23T15:26:34.8330870Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AuraWind/AuraWind
+2026-04-23T15:26:34.8467460Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-04-23T15:26:34.8528370Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-04-23T15:26:34.9957530Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-04-23T15:26:35.0007450Z http.https://github.com/.extraheader
+2026-04-23T15:26:35.0015670Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-04-23T15:26:35.0075690Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-04-23T15:26:35.1253670Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-04-23T15:26:35.1335440Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-04-23T15:26:35.2178300Z Cleaning up orphan processes
+2026-04-23T15:26:35.8507890Z Terminate orphan process: pid (1683) (ibtoold)
+2026-04-23T15:26:35.8959740Z Terminate orphan process: pid (1282) (ibtoold)
+2026-04-23T15:26:35.9993950Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/upload-artifact@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
