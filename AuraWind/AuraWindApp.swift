@@ -13,8 +13,11 @@ final class AuraWindAppDelegate: NSObject, NSApplicationDelegate {
 
         Task { @MainActor in
             AuraWindApp.bootstrapServicesIfNeeded()
-            NSApp.windows.forEach { $0.orderOut(nil) }
         }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        true
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -90,7 +93,7 @@ struct AuraWindApp: App {
                 tempViewModel: tempViewModel
             )
         } label: {
-            Label("AuraWind", image: "MenuBarIcon")
+            Label("AuraWind", systemImage: "fanblades.fill")
                 .labelStyle(.iconOnly)
         }
         .menuBarExtraStyle(.window)
