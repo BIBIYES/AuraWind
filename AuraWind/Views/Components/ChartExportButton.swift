@@ -118,62 +118,41 @@ struct ChartExportButton: View {
     // MARK: - Export Menu Content
     
     private var exportMenuContent: some View {
-        Group {
-            // 快速导出选项
-            Section("快速导出") {
-                ForEach(supportedFormats, id: \.self) { format in
-                    Button {
-                        performQuickExport(format: format)
-                    } label: {
-                        HStack {
-                            Image(systemName: formatIcon(format))
-                                .frame(width: 20)
-                            Text(format.description)
-                            Spacer()
-                            Text(".\(format.fileExtension)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
+        Button {
+            performQuickExport(format: .csv)
+        } label: {
+            Label("快速导出 CSV", systemImage: formatIcon(.csv))
+        }
+
+        Divider()
+
+        Button {
+            showSettings = true
+        } label: {
+            Label("导出设置", systemImage: "gear")
+        }
+
+        if exportVM.lastExportedFile != nil {
+            Button {
+                exportVM.openLastExportedFile()
+            } label: {
+                Label("打开最后导出", systemImage: "folder")
             }
-            
+
+            Button {
+                exportVM.revealLastExportedFile()
+            } label: {
+                Label("在Finder中显示", systemImage: "arrow.right.circle")
+            }
+        }
+
+        if hasMultipleSeries {
             Divider()
-            
-            // 高级选项
-            Section("高级选项") {
-                Button {
-                    showSettings = true
-                } label: {
-                    Label("导出设置", systemImage: "gear")
-                }
-                
-                if exportVM.lastExportedFile != nil {
-                    Button {
-                        exportVM.openLastExportedFile()
-                    } label: {
-                        Label("打开最后导出", systemImage: "folder")
-                    }
-                    
-                    Button {
-                        exportVM.revealLastExportedFile()
-                    } label: {
-                        Label("在Finder中显示", systemImage: "arrow.right.circle")
-                    }
-                }
-            }
-            
-            // 批量导出（如果有多个数据系列）
-            if hasMultipleSeries {
-                Divider()
-                
-                Section("批量导出") {
-                    Button {
-                        performBatchExport()
-                    } label: {
-                        Label("导出所有系列", systemImage: "doc.on.doc")
-                    }
-                }
+
+            Button {
+                performBatchExport()
+            } label: {
+                Label("导出所有系列", systemImage: "doc.on.doc")
             }
         }
     }
