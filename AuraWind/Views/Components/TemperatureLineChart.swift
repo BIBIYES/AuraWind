@@ -11,6 +11,24 @@ import Charts
 /// 温度折线图组件
 /// 使用Swift Charts展示多传感器温度趋势
 struct TemperatureLineChart: View {
+    private static let timeFormatterMMDDHHMM: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd HH:mm"
+        return formatter
+    }()
+
+    private static let timeFormatterHHMM: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+
+    private static let timeFormatterHHMMSS: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        return formatter
+    }()
+
     
     // MARK: - Properties
     
@@ -37,6 +55,24 @@ struct TemperatureLineChart: View {
     
     /// 当前配色方案
     @Environment(\.colorScheme) private var colorScheme
+
+    /// 预分组后的序列数据（避免每次重绘重复 filter）
+    private let groupedSeries: [(label: String, points: [ChartDataPoint])]
+
+    /// 预计算标签列表
+    private let labels: [String]
+
+    /// 每个标签的最新值缓存
+    private let latestValueByLabel: [String: Double]
+
+    /// 预计算时间范围
+    private let minTimestamp: Date
+    private let maxTimestamp: Date
+    private let timeSpan: TimeInterval
+
+    /// 预计算值域
+    private let minValue: Double?
+    private let maxValue: Double?
     
     // MARK: - Initialization
     
@@ -56,13 +92,42 @@ struct TemperatureLineChart: View {
         self.height = height
         self.yAxisRange = yAxisRange
         self.rangeManager = rangeManager
+
+        let grouped = Dictionary(grouping: dataPoints, by: \.label)
+        let sortedLabels = grouped.keys.sorted()
+        self.labels = sortedLabels
+        let groupedSeriesLocal = sortedLabels.map { label in
+            let points = grouped[label]?.sorted(by: { $0.timestamp < $1.timestamp }) ?? []
+            return (label: label, points: points)
+        }
+        self.groupedSeries = groupedSeriesLocal
+
+        var latestMap: [String: Double] = [:]
+        latestMap.reserveCapacity(groupedSeriesLocal.count)
+        for series in groupedSeriesLocal {
+            if let latest = series.points.last?.value {
+                latestMap[series.label] = latest
+            }
+        }
+        self.latestValueByLabel = latestMap
+
+        let timestamps = dataPoints.map(\.timestamp)
+        let minTimestampLocal = timestamps.min() ?? Date()
+        let maxTimestampLocal = timestamps.max() ?? Date()
+        self.minTimestamp = minTimestampLocal
+        self.maxTimestamp = maxTimestampLocal
+        self.timeSpan = maxTimestampLocal.timeIntervalSince(minTimestampLocal)
+
+        let values = dataPoints.map(\.value)
+        self.minValue = values.min()
+        self.maxValue = values.max()
     }
     
     // MARK: - Body
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            if showLegend && !uniqueLabels.isEmpty {
+            if showLegend && !labels.isEmpty {
                 legendView
             }
             
@@ -79,49 +144,47 @@ struct TemperatureLineChart: View {
             emptyStateView
         } else {
             Chart {
-                ForEach(uniqueLabels, id: \.self) { label in
-                    let points = dataPoints.filter { $0.label == label }
-                    
-                    ForEach(points, id: \.id) { point in
+                ForEach(groupedSeries, id: \.label) { series in
+                    ForEach(series.points, id: \.id) { point in
                         switch displayMode {
                         case .line:
                             LineMark(
                                 x: .value("时间", point.timestamp),
                                 y: .value("温度", point.value)
                             )
-                            .foregroundStyle(by: .value("传感器", label))
+                            .foregroundStyle(by: .value("传感器", series.label))
                             .lineStyle(StrokeStyle(lineWidth: 2))
-                            .interpolationMethod(.catmullRom)
+                            .interpolationMethod(.linear)
                             
                         case .area:
                             AreaMark(
                                 x: .value("时间", point.timestamp),
                                 y: .value("温度", point.value)
                             )
-                            .foregroundStyle(by: .value("传感器", label))
+                            .foregroundStyle(by: .value("传感器", series.label))
                             .opacity(0.3)
-                            .interpolationMethod(.catmullRom)
+                            .interpolationMethod(.linear)
                             
                             LineMark(
                                 x: .value("时间", point.timestamp),
                                 y: .value("温度", point.value)
                             )
-                            .foregroundStyle(by: .value("传感器", label))
+                            .foregroundStyle(by: .value("传感器", series.label))
                             .lineStyle(StrokeStyle(lineWidth: 2))
-                            .interpolationMethod(.catmullRom)
+                            .interpolationMethod(.linear)
                             
                         case .point:
                             PointMark(
                                 x: .value("时间", point.timestamp),
                                 y: .value("温度", point.value)
                             )
-                            .foregroundStyle(by: .value("传感器", label))
+                            .foregroundStyle(by: .value("传感器", series.label))
                         }
                     }
                 }
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: xAxisStride)) { value in
+                AxisMarks(values: .automatic(desiredCount: xAxisDesiredTickCount)) { value in
                     if let date = value.as(Date.self) {
                         AxisGridLine(stroke: StrokeStyle(
                             lineWidth: showGrid ? 0.5 : 0,
@@ -173,7 +236,7 @@ struct TemperatureLineChart: View {
     private var legendView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(uniqueLabels, id: \.self) { label in
+                ForEach(labels, id: \.self) { label in
                     HStack(spacing: 6) {
                         Circle()
                             .fill(colorForLabel(label))
@@ -223,16 +286,8 @@ struct TemperatureLineChart: View {
     
     // MARK: - Helpers
     
-    /// 唯一的传感器标签
-    private var uniqueLabels: [String] {
-        let labels = dataPoints.map { $0.label }
-        let uniqueSet = Set<String>(labels)
-        return Array<String>(uniqueSet).sorted()
-    }
-    
     /// 获取标签对应的颜色
     private func colorForLabel(_ label: String) -> Color {
-        let labels = uniqueLabels
         let index = labels.firstIndex(of: label) ?? 0
         return getColorAtIndex(index)
     }
@@ -258,68 +313,49 @@ struct TemperatureLineChart: View {
     
     /// 获取标签的最新值
     private func latestValue(for label: String) -> Double? {
-        let filteredPoints = dataPoints.filter { $0.label == label }
-        guard !filteredPoints.isEmpty else { return nil }
-        let latestPoint = filteredPoints.max { $0.timestamp < $1.timestamp }
-        return latestPoint?.value
+        latestValueByLabel[label]
     }
     
     /// 格式化时间
     private func formatTime(_ date: Date) -> String {
         guard !dataPoints.isEmpty else { return "" }
         
-        let timeSpan = calculateTimeSpan()
-        let dateFormat = getDateFormat(for: timeSpan)
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = dateFormat
-        return formatter.string(from: date)
+        if timeSpan > 3600 * 12 {
+            return Self.timeFormatterMMDDHHMM.string(from: date)
+        } else if timeSpan > 3600 {
+            return Self.timeFormatterHHMM.string(from: date)
+        } else {
+            return Self.timeFormatterHHMMSS.string(from: date)
+        }
     }
     
     /// 计算时间跨度
     private func calculateTimeSpan() -> TimeInterval {
-        let maxTimestamp = getMaxTimestamp()
-        let minTimestamp = getMinTimestamp()
-        return maxTimestamp.timeIntervalSince(minTimestamp)
+        timeSpan
     }
     
     /// 获取最大时间戳
     private func getMaxTimestamp() -> Date {
-        return dataPoints.max { $0.timestamp < $1.timestamp }?.timestamp ?? Date()
+        maxTimestamp
     }
     
     /// 获取最小时间戳
     private func getMinTimestamp() -> Date {
-        return dataPoints.min { $0.timestamp < $1.timestamp }?.timestamp ?? Date()
+        minTimestamp
     }
     
-    /// 根据时间跨度获取日期格式
-    private func getDateFormat(for timeSpan: TimeInterval) -> String {
-        if timeSpan > 3600 * 12 {
-            return "MM/dd HH:mm"  // 超过12小时，显示日期+时间
-        } else if timeSpan > 3600 {
-            return "HH:mm"        // 1-12小时，显示时:分
-        } else {
-            return "HH:mm:ss"     // 小于1小时，显示时:分:秒
-        }
-    }
-    
-    /// X轴刻度间隔
-    private var xAxisStride: Calendar.Component {
-        guard !dataPoints.isEmpty else { return .minute }
-        
+    /// X轴建议刻度数量
+    private var xAxisDesiredTickCount: Int {
+        guard !dataPoints.isEmpty else { return 4 }
         let timeSpan = calculateTimeSpan()
-        return getCalendarComponent(for: timeSpan)
-    }
-    
-    /// 根据时间跨度获取日历组件
-    private func getCalendarComponent(for timeSpan: TimeInterval) -> Calendar.Component {
         if timeSpan > 3600 * 12 {
-            return .hour
+            return 6
         } else if timeSpan > 3600 {
-            return .minute
+            return 5
+        } else if timeSpan > 600 {
+            return 4
         } else {
-            return .second
+            return 3
         }
     }
     
@@ -338,11 +374,7 @@ struct TemperatureLineChart: View {
         }
         
         // 默认自动计算范围
-        let values = dataPoints.map { $0.value }
-        guard !values.isEmpty else { return 0...100 }
-        
-        let dataMin = values.min() ?? 0
-        let dataMax = values.max() ?? 100
+        guard let dataMin = minValue, let dataMax = maxValue else { return 0...100 }
         let range = dataMax - dataMin
         let padding = range * 0.1
         

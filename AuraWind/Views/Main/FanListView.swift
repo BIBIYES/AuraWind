@@ -64,9 +64,9 @@ struct FanListView: View {
                 }
                 .pickerStyle(.segmented)
                 
-                if viewModel.currentMode == .curve,
+                if [.silent, .balanced].contains(viewModel.currentMode),
                    let profile = viewModel.activeCurveProfile {
-                    Text("当前曲线: \(profile.name)")
+                    Text("当前温控曲线: \(profile.name)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -78,7 +78,9 @@ struct FanListView: View {
     // MARK: - Fan Chart Section
     
     private var fanChartSection: some View {
-        BlurGlassCard {
+        let currentData = viewModel.getCurrentChartData()
+
+        return BlurGlassCard {
             VStack(alignment: .leading, spacing: 16) {
                 // 标题和控制器
                 HStack {
@@ -92,16 +94,16 @@ struct FanListView: View {
                     Spacer()
                     
                     // 数据点统计
-                    if !viewModel.getCurrentChartData().isEmpty {
-                        Text("\(viewModel.getCurrentChartData().count) 个数据点")
+                    if !currentData.isEmpty {
+                        Text("\(currentData.count) 个数据点")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                     
                     // 图表导出按钮
-                    if !viewModel.getCurrentChartData().isEmpty {
+                    if !currentData.isEmpty {
                         ChartExportButton(
-                            dataPoints: viewModel.getCurrentChartData(),
+                            dataPoints: currentData,
                             chartType: .fanSpeed,
                             persistenceService: persistenceService
                         )
@@ -115,9 +117,9 @@ struct FanListView: View {
                 fanSelector
                 
                 // 图表显示
-                if !viewModel.getCurrentChartData().isEmpty {
+                if !currentData.isEmpty {
                     FanSpeedChart(
-                        dataPoints: viewModel.getCurrentChartData(),
+                        dataPoints: currentData,
                         displayMode: .line,
                         height: 250
                     )

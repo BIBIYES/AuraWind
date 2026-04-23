@@ -145,10 +145,10 @@ struct DashboardView: View {
                 // 模式切换
                 LazyVGrid(columns: [
                     GridItem(.flexible()),
-                    GridItem(.flexible()),
                     GridItem(.flexible())
                 ], spacing: 12) {
                     ForEach([
+                        FanControlViewModel.FanMode.manual,
                         FanControlViewModel.FanMode.silent,
                         FanControlViewModel.FanMode.balanced,
                         FanControlViewModel.FanMode.performance
@@ -386,18 +386,14 @@ private struct ModeButton: View {
     
     private var modeIcon: String {
         switch mode {
+        case .manual:
+            return "hand.raised.fill"
         case .silent:
             return "speaker.wave.1"
         case .balanced:
             return "scale.3d"
         case .performance:
             return "bolt.fill"
-        case .auto:
-            return "wand.and.stars"
-        case .manual:
-            return "hand.raised.fill"
-        case .curve:
-            return "chart.line.uptrend.xyaxis"
         }
     }
 }

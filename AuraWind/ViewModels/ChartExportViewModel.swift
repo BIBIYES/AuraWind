@@ -29,7 +29,7 @@ final class ChartExportViewModel: ObservableObject {
     @Published private(set) var exportError: ChartExportError?
     
     /// 选中的导出格式
-    @Published var selectedFormat: ChartExportFormat = .png
+    @Published var selectedFormat: ChartExportFormat = .csv
     
     /// 是否显示导出设置
     @Published var showExportSettings: Bool = false
@@ -162,7 +162,7 @@ final class ChartExportViewModel: ObservableObject {
     
     /// 重置导出设置
     func resetSettings() {
-        selectedFormat = .png
+        selectedFormat = .csv
         exportFilename = "AuraWind_Chart"
         includeLegend = true
         includeGrid = true
@@ -281,7 +281,8 @@ final class ChartExportViewModel: ObservableObject {
     private func loadSettings() {
         if let formatRaw: String = try? persistenceService.load(String.self, forKey: "chartExportFormat"),
            let format = ChartExportFormat(rawValue: formatRaw) {
-            selectedFormat = format
+            // 当前稳定导出仅开放 CSV，旧设置自动迁移。
+            selectedFormat = format == .csv ? format : .csv
         }
         
         if let filename: String = try? persistenceService.load(String.self, forKey: "chartExportFilename") {

@@ -31,6 +31,18 @@ final class SMCServiceWithHelper: SMCServiceProtocol {
     
     /// 风扇信息缓存
     private var fanInfoCache: [Int: CachedValue<FanInfoData>] = [:]
+
+    /// 全量温度缓存（用于合并短时间内重复请求）
+    private var allTemperatureCache: CachedValue<[TemperatureSensor]>?
+
+    /// 全量温度读取中的任务（用于并发去重）
+    private var inFlightTemperatureTask: Task<[TemperatureSensor], Error>?
+
+    /// 全量温度缓存有效期
+    private let allTemperatureCacheTimeout: TimeInterval = 1.0
+
+    /// 启动连接中的任务（避免并发重复连接）
+    private var inFlightStartTask: Task<Void, Error>?
     
     /// 缓存值包装器
     private struct CachedValue<T> {
@@ -57,30 +69,40 @@ final class SMCServiceWithHelper: SMCServiceProtocol {
     
     func start() async throws {
         guard !isConnected else { return }
-        
-        NSLog("[SMCServiceWithHelper] 启动 SMC 服务（使用 Helper Tool）...")
-        print("启动 SMC 服务（使用 Helper Tool）...")
-        
-        do {
-            // 连接到 Helper Tool
-            NSLog("[SMCServiceWithHelper] 尝试连接到 Helper Tool...")
-            try await helperManager.connect()
-            NSLog("[SMCServiceWithHelper] ✅ Helper Tool 连接成功")
-            
-            // 连接到 SMC
-            NSLog("[SMCServiceWithHelper] 尝试连接到 SMC...")
-            try await helperManager.connectToSMC()
-            NSLog("[SMCServiceWithHelper] ✅ SMC 连接成功")
-            
-            isConnected = true
-            NSLog("[SMCServiceWithHelper] ✅ SMC 服务启动成功")
-            print("✅ SMC 服务启动成功")
-            
-        } catch {
-            NSLog("[SMCServiceWithHelper] ❌ SMC 服务启动失败: %@", error.localizedDescription)
-            print("❌ SMC 服务启动失败: \(error.localizedDescription)")
-            throw AuraWindError.smcConnectionFailed
+
+        if let task = inFlightStartTask {
+            try await task.value
+            return
         }
+
+        let task = Task<Void, Error> { @MainActor in
+            NSLog("[SMCServiceWithHelper] 启动 SMC 服务（使用 Helper Tool）...")
+            print("启动 SMC 服务（使用 Helper Tool）...")
+
+            do {
+                // 连接到 Helper Tool
+                NSLog("[SMCServiceWithHelper] 尝试连接到 Helper Tool...")
+                try await helperManager.connect()
+                NSLog("[SMCServiceWithHelper] ✅ Helper Tool 连接成功")
+
+                // 连接到 SMC
+                NSLog("[SMCServiceWithHelper] 尝试连接到 SMC...")
+                try await helperManager.connectToSMC()
+                NSLog("[SMCServiceWithHelper] ✅ SMC 连接成功")
+
+                isConnected = true
+                NSLog("[SMCServiceWithHelper] ✅ SMC 服务启动成功")
+                print("✅ SMC 服务启动成功")
+            } catch {
+                NSLog("[SMCServiceWithHelper] ❌ SMC 服务启动失败: %@", error.localizedDescription)
+                print("❌ SMC 服务启动失败: \(error.localizedDescription)")
+                throw AuraWindError.smcConnectionFailed
+            }
+        }
+
+        inFlightStartTask = task
+        defer { inFlightStartTask = nil }
+        try await task.value
     }
     
     func stop() async {
@@ -94,6 +116,9 @@ final class SMCServiceWithHelper: SMCServiceProtocol {
         isConnected = false
         temperatureCache.removeAll()
         fanInfoCache.removeAll()
+        allTemperatureCache = nil
+        inFlightTemperatureTask = nil
+        inFlightStartTask = nil
         
         print("SMC 服务已停止")
     }
@@ -141,46 +166,56 @@ final class SMCServiceWithHelper: SMCServiceProtocol {
     }
     
     func getAllTemperatures() async throws -> [TemperatureSensor] {
-        NSLog("[SMCServiceWithHelper] getAllTemperatures 被调用")
         guard isConnected else {
-            NSLog("[SMCServiceWithHelper] ❌ SMC 未连接")
             throw AuraWindError.smcNotConnected
         }
-        
-        do {
-            // 获取所有可用的传感器
-            NSLog("[SMCServiceWithHelper] 正在获取传感器列表...")
+
+        if let cached = allTemperatureCache,
+           cached.isValid(timeout: allTemperatureCacheTimeout) {
+            return cached.value
+        }
+
+        if let inFlightTask = inFlightTemperatureTask {
+            return try await inFlightTask.value
+        }
+
+        let task = Task<[TemperatureSensor], Error> { @MainActor in
             let sensorKeys = try await helperManager.getAllTemperatureSensors()
-            NSLog("[SMCServiceWithHelper] 获取到 \(sensorKeys.count) 个传感器: \(sensorKeys)")
-            
             var sensors: [TemperatureSensor] = []
-            
+            sensors.reserveCapacity(sensorKeys.count)
+
             for key in sensorKeys {
                 do {
                     let temperature = try await helperManager.readTemperature(sensorKey: key)
-                    NSLog("[SMCServiceWithHelper] 传感器 \(key) 温度: \(temperature)°C")
-                    
+                    guard isPlausibleTemperature(temperature) else {
+                        continue
+                    }
                     let sensor = TemperatureSensor(
                         id: UUID(),
                         type: inferSensorType(from: key),
                         name: getSensorName(for: key),
                         currentTemperature: temperature,
                         maxTemperature: 100.0,
-                        readings: []
+                        readings: [],
+                        smcKey: key
                     )
-                    
                     sensors.append(sensor)
                 } catch {
-                    NSLog("[SMCServiceWithHelper] ❌ 读取传感器 \(key) 失败: \(error)")
                     continue
                 }
             }
-            
-            NSLog("[SMCServiceWithHelper] 返回 \(sensors.count) 个传感器")
+
             return sensors
-            
+        }
+
+        inFlightTemperatureTask = task
+        defer { inFlightTemperatureTask = nil }
+
+        do {
+            let sensors = try await task.value
+            allTemperatureCache = CachedValue(value: sensors, timestamp: Date())
+            return sensors
         } catch {
-            NSLog("[SMCServiceWithHelper] ❌ 获取温度列表失败: \(error.localizedDescription)")
             print("获取温度列表失败: \(error.localizedDescription)")
             throw AuraWindError.temperatureSensorFailed
         }
@@ -337,15 +372,17 @@ final class SMCServiceWithHelper: SMCServiceProtocol {
     
     /// 根据 SMC 键推断传感器类型
     private func inferSensorType(from key: String) -> TemperatureSensor.SensorType {
-        if key.starts(with: "TC") {
+        let normalized = key.lowercased()
+
+        if normalized.hasPrefix("tc") || normalized.hasPrefix("tp") {
             return .cpu
-        } else if key.starts(with: "TG") {
+        } else if normalized.hasPrefix("tg") {
             return .gpu
-        } else if key.starts(with: "Th") {
+        } else if normalized.hasPrefix("th") {
             return .ssd
-        } else if key.starts(with: "TA") {
+        } else if normalized.hasPrefix("ta") {
             return .ambient
-        } else if key.starts(with: "TB") {
+        } else if normalized.hasPrefix("tb") {
             return .battery
         } else {
             return .proximity
@@ -354,21 +391,69 @@ final class SMCServiceWithHelper: SMCServiceProtocol {
     
     /// 获取传感器名称
     private func getSensorName(for key: String) -> String {
+        let normalized = key.uppercased()
         let sensorNames: [String: String] = [
+            // Apple Silicon 常见键（Apple 未公开精确语义，这里按常见分组做中文显示）
+            "TP09": "CPU 温区传感器 TP09",
+            "TP0T": "CPU 温区传感器 TP0T",
+            "TP01": "CPU 温区传感器 TP01",
+            "TP05": "CPU 温区传感器 TP05",
+            "TP0D": "CPU 温区传感器 TP0D",
+            "TP0H": "CPU 温区传感器 TP0H",
+            "TP0L": "CPU 温区传感器 TP0L",
+            "TP0P": "CPU 温区传感器 TP0P",
+            "TP0X": "CPU 温区传感器 TP0X",
+            "TP0B": "CPU 温区传感器 TP0B",
+            "TG05": "GPU 温区传感器 TG05",
+            "TG0D": "GPU 温区传感器 TG0D",
+            "TG0L": "GPU 温区传感器 TG0L",
+            "TG0T": "GPU 温区传感器 TG0T",
+            "TM02": "内存温区传感器 TM02",
+            "TM06": "内存温区传感器 TM06",
+            "TM08": "内存温区传感器 TM08",
+            "TM09": "内存温区传感器 TM09",
+
             "TC0P": "CPU 接近传感器",
             "TC0D": "CPU 芯片温度",
             "TC0E": "CPU 核心 1",
             "TC0F": "CPU 核心 2",
             "TG0P": "GPU 接近传感器",
-            "TG0D": "GPU 芯片温度",
-            "Th0H": "硬盘温度",
-            "Tm0P": "主板温度",
+            "TH0H": "硬盘温度",
+            "TM0P": "主板温度",
             "TN0P": "北桥温度",
             "TA0P": "环境温度",
             "TB0T": "电池温度",
         ]
-        
-        return sensorNames[key] ?? key
+
+        if let name = sensorNames[normalized] {
+            return name
+        }
+
+        if normalized.hasPrefix("TP") || normalized.hasPrefix("TC") {
+            return "CPU 温度传感器 \(normalized)"
+        }
+        if normalized.hasPrefix("TG") {
+            return "GPU 温度传感器 \(normalized)"
+        }
+        if normalized.hasPrefix("TM") {
+            return "主板/内存温度传感器 \(normalized)"
+        }
+        if normalized.hasPrefix("TA") {
+            return "环境温度传感器 \(normalized)"
+        }
+        if normalized.hasPrefix("TB") {
+            return "电池温度传感器 \(normalized)"
+        }
+        if normalized.hasPrefix("TH") {
+            return "存储温度传感器 \(normalized)"
+        }
+
+        return "温度传感器 \(normalized)"
+    }
+
+    /// 温度值合理性检查（过滤 0 值和明显异常值）
+    private func isPlausibleTemperature(_ value: Double) -> Bool {
+        value >= 1.0 && value <= 130.0
     }
 }
 

@@ -15,7 +15,7 @@ struct TemperatureChartView: View {
     // MARK: - Properties
     
     @ObservedObject var viewModel: TemperatureMonitorViewModel
-    @State private var displayMode: TemperatureLineChart.DisplayMode = .area
+    @State private var displayMode: TemperatureLineChart.DisplayMode = .line
     @State private var showSensorPicker: Bool = false
     
     // 依赖服务
@@ -218,6 +218,10 @@ struct TemperatureChartView: View {
     
     @ViewBuilder
     private var chartSection: some View {
+        let currentData = filteredChartData
+        let visibleAnnotations = viewModel.getVisibleAnnotations()
+        let visibleEventMarkers = viewModel.annotationManager.visibleEventMarkers
+
         BlurGlassCard {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
@@ -233,7 +237,7 @@ struct TemperatureChartView: View {
                     // 数据点统计和控制器
                     HStack(spacing: 12) {
                         // 范围显示
-                        if !filteredChartData.isEmpty {
+                        if !currentData.isEmpty {
                             Text(rangeManager.getRangeDisplayText(for: .temperature))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -253,15 +257,15 @@ struct TemperatureChartView: View {
                         
                         // 数据点统计
                         if !viewModel.chartData.isEmpty {
-                            Text("\(filteredChartData.count) 个数据点")
+                            Text("\(currentData.count) 个数据点")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                         
                         // 图表导出按钮
-                        if !filteredChartData.isEmpty {
+                        if !currentData.isEmpty {
                             ChartExportButton(
-                                dataPoints: filteredChartData,
+                                dataPoints: currentData,
                                 chartType: .temperature,
                                 persistenceService: persistenceService
                             )
@@ -273,7 +277,7 @@ struct TemperatureChartView: View {
                 
                 // 实时图表
                 TemperatureLineChart(
-                    dataPoints: filteredChartData,
+                    dataPoints: currentData,
                     displayMode: displayMode,
                     showLegend: true,
                     showGrid: true,
@@ -285,11 +289,11 @@ struct TemperatureChartView: View {
         }
         
         // 数据标注面板
-        if !viewModel.getVisibleAnnotations().isEmpty || !viewModel.annotationManager.visibleEventMarkers.isEmpty {
+        if !visibleAnnotations.isEmpty || !visibleEventMarkers.isEmpty {
             DataAnnotationView(
-                annotations: viewModel.getVisibleAnnotations(),
-                eventMarkers: viewModel.annotationManager.visibleEventMarkers,
-                dataPoints: filteredChartData,
+                annotations: visibleAnnotations,
+                eventMarkers: visibleEventMarkers,
+                dataPoints: currentData,
                 chartType: .temperature
             )
         }
@@ -329,7 +333,7 @@ struct TemperatureChartView: View {
                         Task {
                             do {
                                 let url = try await viewModel.exportData()
-                                print("数据已导出到: \(url.path)")
+                                NSWorkspace.shared.activateFileViewerSelecting([url])
                             } catch {
                                 print("导出失败: \(error)")
                             }

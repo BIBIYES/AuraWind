@@ -1,291 +1,271 @@
-# AuraWind 开发日志
+# AuraWind
 
-## 项目概述
-这是一个开发失败的项目💔💔💔
-AuraWind 是一个 macOS 风扇控制应用，旨在通过读取 SMC (System Management Controller) 数据来监控 Mac 的温度和风扇状态，并提供自定义风扇控制功能。
+AuraWind 是一个面向 macOS 的本机风扇控制与温度监控工具，目标是：
 
-**开发时间**: 2025年11月  
-**开发平台**: macOS (Apple Silicon)  
-**技术栈**: SwiftUI, XPC, SMC, Privileged Helper Tool
+- 在本机可控地调节风扇转速
+- 稳定读取硬件温度并可视化趋势
+- 通过特权 Helper 完成系统级 SMC 访问
+- 以 SwiftUI + MVVM 方式保持可维护性
 
----
+## 功能概览
 
-## 开发历程与挑战
+- 风扇模式：手动 / 静音 / 平衡 / 性能
+- 实时温度监控与历史趋势图
+- 风扇转速趋势图与时间范围筛选
+- 数据导出（CSV）
+- 菜单栏快捷控制
+- 本机打包与安装脚本（包含 Helper 安装）
 
-### 🎯 项目目标
+## 项目架构
 
-1. 读取 Mac 的实时温度数据（CPU、GPU、环境温度等）
-2. 监控和控制风扇转速
-3. 提供美观的用户界面
-4. 支持自动和手动风扇控制模式
+### 1) 分层设计
 
-### 💔 遇到的主要困难
+- `Views/`：SwiftUI 视图层（仪表盘、温度页、风扇页、设置页）
+- `ViewModels/`：状态管理与业务编排（MVVM）
+- `Services/`：SMC、Helper、导出、持久化等基础能力
+- `Models/`：风扇、温度、图表点、标注等数据模型
+- `SMCHelper/`：以 root 权限运行的 XPC Helper，可执行 SMC 读写
 
-#### 1. SMC 访问权限问题
+### 2) 运行链路
 
-**问题描述**:  
-macOS 的 SMC (System Management Controller) 是一个底层硬件接口，需要特殊权限才能访问。直接访问会遇到权限拒绝。
+1. App 启动后初始化 `SMCServiceWithHelper`
+2. 主进程通过 `HelperToolManager` 建立 XPC 连接
+3. Helper 执行底层 SMC 访问并返回温度/风扇数据
+4. ViewModel 进行模式控制、缓存、降采样与图表数据组织
+5. SwiftUI 页面实时渲染与交互
 
-**尝试的解决方案**:
-- ✅ 添加 `com.apple.security.temporary-exception.iokit-user-client-class` entitlement
-- ✅ 添加 `com.apple.security.temporary-exception.sbpl` entitlement
-- ❌ 但在 Release 构建中仍然无法访问
+### 3) 核心模块
 
-**结论**: 直接访问 SMC 在沙盒环境下几乎不可能实现。
+- `SMCServiceWithHelper`：统一温度/风扇访问入口，含缓存与连接去重
+- `FanControlViewModel`：风扇模式切换、曲线插值与目标转速控制
+- `TemperatureMonitorViewModel`：温度采集、过滤、图表降采样与导出
+- `ChartExportService`：图表数据导出（当前稳定格式为 CSV）
 
-#### 2. Privileged Helper Tool 架构
+## 制作思路
 
-**问题描述**:  
-为了访问 SMC，需要使用 macOS 的 Privileged Helper Tool 机制，这是一个复杂的架构，涉及：
-- XPC (跨进程通信)
-- SMJobBless (特权助手安装)
-- 代码签名和证书
-- Launchd 服务管理
+### 1) 为什么使用 Helper Tool
 
-**遇到的具体问题**:
+macOS 对 SMC 写入权限严格限制。为了在本机可用场景下稳定控制风扇，采用了：
 
-##### 2.1 SMJobBless 与 Ad-hoc 签名不兼容
+- 主 App（普通权限）负责 UI 与业务逻辑
+- Helper（系统安装）负责特权操作
+- XPC 作为边界，隔离权限与业务代码
 
-```
-问题: SMJobBless 要求使用正式的 Apple Developer 证书签名
-现状: 只有 ad-hoc 签名（免费开发者账号）
-结果: SMJobBless 调用失败，返回 "No such process" 错误
-```
+这样能兼顾可用性和可维护性，且不依赖给他人分发所需的完整签名/公证流程。
 
-**解决方案**: 创建手动安装脚本 (`手动安装Helper.sh`)，绕过 SMJobBless，直接将 Helper Tool 安装到系统目录。
+### 2) 图标与品牌资源
 
-##### 2.2 SMC 数据结构大小错误
+- 设计源文件位于 `AuraWind/icon/`
+- App 图标输入源：`AuraWind/icon/logo.png`
+- Dock 视觉尺寸优化源：`AuraWind/icon/logo_appicon_source.png`（在 1024 画布内保留留白，避免看起来比系统图标更大）
+- 最终尺寸输出到 `Assets.xcassets/AppIcon.appiconset`
 
-**最关键的技术问题**:
+### 3) 性能与稳定性策略
 
-```
-错误信息: SMCC::smcYPCEventCheck ERROR: invalid input structure size:53
-期望大小: 80 bytes
-实际大小: 53 bytes
-```
+- 温度数据二次过滤（剔除无效 0°C/异常值）
+- 图表显示降采样，避免长时间运行卡顿
+- 自动标注节流与数量上限，避免内存持续增长
+- 启动连接任务去重，减少并发初始化抖动
 
-**问题根源**:  
-`SMCConnection.swift` 中的 `SMCKeyData` 结构体定义不正确，与 macOS 内核期望的结构体大小不匹配。
+## 技术难点（重点）
 
-**修复过程**:
-```swift
-// 原始定义（错误）
-private struct SMCKeyData {
-    var key: UInt32 = 0                    // 4 bytes
-    var vers: (UInt8, UInt8, ...) = ...    // 6 bytes
-    // ... 总共只有 53 bytes
-}
+### 1) Helper Tool 配置与权限链路（最关键）
 
-// 修复后（正确）
-private struct SMCKeyData {
-    var key: UInt32 = 0                    // 4 bytes
-    var vers: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = ...  // 6 bytes
-    var pLimitData: (...) = ...            // 16 bytes
-    var keyInfo = SMCKeyInfoData()         // 6 bytes
-    var result: UInt8 = 0                  // 1 byte
-    var status: UInt8 = 0                  // 1 byte
-    var data8: UInt8 = 0                   // 1 byte
-    var data32: UInt32 = 0                 // 4 bytes
-    var bytes = SMCBytes()                 // 32 bytes
-    var padding: (...) = ...               // 9 bytes
-    // 总共 80 bytes ✅
-}
-```
+难点：
 
-##### 2.3 Helper Tool 进程管理问题
+- SMC 写入不在普通 App 权限范围内，直接在主进程里做会失败或不稳定
+- Helper 需要运行在系统目录，且由 `launchd` 托管
+- 主进程与特权进程之间要做严格的协议边界，避免 UI 层耦合到系统权限逻辑
 
-**问题**: 
-- 旧的 Helper Tool 进程持续运行，导致应用连接到过时的版本
-- 即使重新编译和安装，旧进程仍然存在
-- `pkill` 命令无法完全清理所有实例
+项目做法：
 
-**尝试的解决方案**:
-```bash
-# 停止 launchd 服务
-launchctl unload /Library/LaunchDaemons/com.aurawind.AuraWind.SMCHelper.plist
+- 主进程通过 `HelperToolManager` 统一管理安装状态、XPC 连接和重连
+- Helper 实际安装路径：`/Library/PrivilegedHelperTools/com.aurawind.AuraWind.SMCHelper`
+- LaunchDaemon 配置路径：`/Library/LaunchDaemons/com.aurawind.AuraWind.SMCHelper.plist`
+- 使用 `./打包并安装.sh` 执行本机安装流程，避免开发阶段依赖完整开发者分发签名链
 
-# 强制终止进程
-pkill -9 -f "SMCHelper"
+### 2) XPC 通信稳定性与错误收敛
 
-# 重新加载
-launchctl load /Library/LaunchDaemons/com.aurawind.AuraWind.SMCHelper.plist
-```
+难点：
 
-**结果**: 部分有效，但仍有进程残留问题。
+- XPC 在服务重启、系统切换或异常退出时会中断
+- 如果 UI 侧直接感知原始错误，体验会出现大量抖动
 
-##### 2.4 XPC 通信问题
+项目做法：
 
-**问题**: 
-- 应用与 Helper Tool 之间的 XPC 连接建立成功
-- 但数据传输时没有响应
-- Helper Tool 的日志完全没有输出
+- 在 `HelperToolManager` 中统一处理中断/失效回调
+- 使用连接前可用性探测（如版本请求）判断 Helper 是否真正可用
+- 将连接失败归一成可操作错误（例如提示先运行安装脚本）
 
-**可能的原因**:
-1. XPC 消息格式不匹配
-2. Helper Tool 没有被正确调用
-3. 异步回调处理有问题
-4. 日志系统配置不正确
+### 3) 温度采集可用性（0°C 与无效传感器）
 
-#### 3. 调试困难
+难点：
 
-**主要挑战**:
+- 不同机型的 SMC 键集合不同，部分键会长期返回 0 或异常值
+- Apple Silicon 与 Intel 上可用温度键并不一致
 
-1. **日志难以捕获**:
-   - `print()` 语句在 Helper Tool 中不输出
-   - `NSLog()` 也无法在系统日志中找到
-   - Console.app 过滤困难
+项目做法：
 
-2. **构建和测试周期长**:
-   ```
-   编译 → 打包 → 安装 Helper Tool → 测试 → 发现问题 → 修改代码 → 重复
-   每次循环需要 5-10 分钟
-   ```
+- Helper 先扫描候选键，再按“合理温度区间”过滤
+- 服务层对全量温度读取做短期缓存与并发去重，降低重复扫描成本
+- UI 侧仅展示有效传感器，避免 0°C 污染图表
 
-3. **权限问题**:
-   - 文件被锁定，无法删除
-   - 需要 sudo 权限进行清理
-   - 构建目录权限混乱
+### 4) 风扇控制策略与模式映射
 
-4. **状态不一致**:
-   - 应用显示"所有服务初始化完成"
-   - 但实际没有数据
-   - 无法确定问题出在哪一层
+难点：
 
-### 📊 技术架构
+- “模式”是产品语义，最终要映射为每个风扇的目标转速
+- 多风扇设备需要保持策略一致，避免风扇间行为割裂
 
-```
-┌─────────────────────────────────────────┐
-│         AuraWind.app (主应用)            │
-│  ┌───────────────────────────────────┐  │
-│  │   SMCServiceWithHelper            │  │
-│  │   HelperToolManager (XPC Client)  │  │
-│  └───────────────┬───────────────────┘  │
-└──────────────────┼──────────────────────┘
-                   │ XPC
-                   │ Mach Service
-                   ↓
-┌─────────────────────────────────────────┐
-│  com.aurawind.AuraWind.SMCHelper        │
-│  (Privileged Helper Tool)               │
-│  ┌───────────────────────────────────┐  │
-│  │   XPC Service                     │  │
-│  │   SMCConnection                   │  │
-│  │   IOKit Driver Interface          │  │
-│  └───────────────┬───────────────────┘  │
-└──────────────────┼──────────────────────┘
-                   │ IOKit
-                   ↓
-┌─────────────────────────────────────────┐
-│         macOS Kernel                    │
-│         SMC Driver                      │
-│         (AppleSMC.kext)                 │
-└─────────────────────────────────────────┘
-```
+项目做法：
 
-### 🔧 已实现的功能
+- 统一保留 `手动 / 静音 / 平衡 / 性能` 四种模式
+- 在 ViewModel 侧集中做目标转速计算与下发，Helper 专注执行底层 SMC 写入
 
-✅ **基础架构**:
-- SwiftUI 用户界面
-- MVVM 架构
-- 数据持久化
-- 温度和风扇监控界面
+### 5) 长时间运行下的性能与内存
 
-✅ **Helper Tool 机制**:
-- XPC 通信协议定义
-- Helper Tool 实现
-- 手动安装脚本
-- Launchd 配置
+难点：
 
-✅ **SMC 通信**:
-- SMC 连接建立
-- 数据结构定义（80 bytes）
-- 读写接口
+- 图表在持续监控时会持续追加点位，容易导致 UI 卡顿和内存抬升
 
-### ❌ 未解决的问题
+项目做法：
 
-1. **数据读取失败**: 虽然连接成功，但无法获取实际的温度和风扇数据
-2. **Helper Tool 日志缺失**: 无法有效调试 Helper Tool 内部逻辑
-3. **进程管理混乱**: 旧进程残留，难以确保使用最新版本
-4. **XPC 通信不稳定**: 消息传递可能存在问题
+- 温度/风扇趋势图采用时间窗口与降采样策略
+- 自动标注采用节流和数量上限
+- 高频读取路径加入缓存 TTL 与 in-flight 任务去重
 
-### 💡 经验教训
+## 目录结构
 
-1. **SMC 访问极其复杂**: 
-   - 需要深入了解 macOS 内核接口
-   - 数据结构必须精确匹配
-   - 权限管理非常严格
-
-2. **Privileged Helper Tool 开发困难**:
-   - 需要正式的开发者证书（$99/年）
-   - 调试非常困难
-   - 文档不完善
-
-3. **替代方案**:
-   - 考虑使用现有的开源库（如 `SMCKit`）
-   - 或者参考成熟的应用（如 Macs Fan Control）
-   - 避免从零开始实现 SMC 访问
-
-### 📚 参考资料
-
-- [Apple Developer: SMJobBless](https://developer.apple.com/documentation/servicemanagement/1431078-smjobbless)
-- [Apple Developer: XPC Services](https://developer.apple.com/documentation/xpc)
-- [IOKit Fundamentals](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/)
-- [Macs Fan Control](https://crystalidea.com/macs-fan-control) - 商业参考实现
-
-### 🎯 未来方向
-
-如果要继续开发，建议：
-
-1. **获取正式的 Apple Developer 证书** ($99/年)
-   - 这是使用 SMJobBless 的前提
-   - 可以正常签名和分发应用
-
-2. **使用现有的 SMC 库**
-   - [SMCKit](https://github.com/beltex/SMCKit)
-   - [HWMonitor](https://github.com/kozlek/HWSensors)
-
-3. **简化架构**
-   - 考虑不使用 Helper Tool
-
-## 项目文件结构
-
-```
+```text
 AuraWind/
-├── AuraWind/                    # 主应用
-│   ├── AuraWindApp.swift       # 应用入口
-│   ├── Views/                  # 视图
-│   ├── ViewModels/             # 视图模型
-│   ├── Models/                 # 数据模型
-│   └── Services/
-│       ├── SMCServiceWithHelper.swift    # SMC 服务（Helper Tool 版本）
-│       ├── SMCConnection.swift           # SMC 底层连接
-│       └── HelperTool/
-│           ├── HelperToolProtocol.swift  # XPC 协议
-│           └── HelperToolManager.swift   # Helper Tool 管理器
-├── SMCHelper/                   # Privileged Helper Tool
-│   ├── main.swift              # Helper Tool 主程序
-│   ├── Info.plist              # Helper Tool 配置
-│   └── Launchd.plist           # Launchd 服务配置
-├── 手动安装Helper.sh            # 手动安装脚本
-├── 打包并安装.sh                # 完整打包脚本
-└── DEVELOPMENT_LOG.md          # 本文档
+├── AuraWind/
+│   ├── Assets.xcassets/
+│   ├── Models/
+│   ├── Services/
+│   │   └── HelperTool/
+│   ├── Utils/
+│   ├── ViewModels/
+│   ├── Views/
+│   │   ├── Components/
+│   │   ├── Main/
+│   │   └── Settings/
+│   └── AuraWindApp.swift
+├── SMCHelper/
+├── AuraWind.xcodeproj/
+├── docs/
+└── 打包并安装.sh
 ```
 
----
+## 环境要求
 
-## 总结
+- macOS 15+
+- Xcode 16+
+- Apple Silicon（已在本机场景优化）
 
-这个项目展示了 macOS 底层硬件访问的复杂性。虽然最终没有完全实现预期功能，但在过程中学到了：
+## 启动与开发
 
-- macOS 安全机制和权限管理
-- XPC 跨进程通信
-- IOKit 驱动接口
-- Privileged Helper Tool 架构
-- SMC 数据结构和协议
+### 1) Xcode 启动（开发调试）
 
-**这是一次宝贵的学习经历，虽然充满挫折，但也积累了重要的技术经验。** 🚀
+```bash
+open AuraWind.xcodeproj
+```
 
----
+在 Xcode 中选择 `AuraWind` scheme，直接 Run。
 
-*最后更新: 2025年11月17日*  
-*状态: 暂停开发，等待更好的解决方案*
+### 2) 命令行构建
+
+```bash
+xcodebuild -project AuraWind.xcodeproj \
+  -scheme AuraWind \
+  -configuration Debug \
+  -derivedDataPath /tmp/AuraWindDerivedData \
+  build
+```
+
+### 3) 本机一键打包与安装（推荐）
+
+```bash
+./打包并安装.sh
+```
+
+脚本会执行：
+
+1. Release 构建
+2. 将 Helper 嵌入 `.app`
+3. ad-hoc 签名
+4. 复制到桌面 `~/Desktop/AuraWind.app`
+5. 安装并启动 `/Library/PrivilegedHelperTools/com.aurawind.AuraWind.SMCHelper`
+
+### 4) 图标更新流程（可复用）
+
+当你替换了 `AuraWind/icon/logo.png`，可按下面流程更新 App 图标：
+
+1. 生成带留白的 AppIcon 源图（避免 Dock 视觉过大）
+2. 重新生成 `AppIcon.appiconset` 下全部尺寸
+3. 重新构建应用
+
+当前仓库已提供生成后的输入图：`AuraWind/icon/logo_appicon_source.png`
+
+## 打包与发布操作
+
+### 本机使用版（无需对外分发）
+
+直接使用：
+
+```bash
+./打包并安装.sh
+```
+
+### 手工打包（高级）
+
+```bash
+xcodebuild -project AuraWind.xcodeproj \
+  -scheme AuraWind \
+  -configuration Release \
+  -derivedDataPath /tmp/AuraWindDD \
+  clean build
+```
+
+产物路径：
+
+- `/tmp/AuraWindDD/Build/Products/Release/AuraWind.app`
+- `/tmp/AuraWindDD/Build/Products/Release/com.aurawind.AuraWind.SMCHelper`
+
+## 常见排障
+
+### 1) 温度显示为 0
+
+- 检查 Helper 是否运行：
+
+```bash
+launchctl print system/com.aurawind.AuraWind.SMCHelper | rg 'state ='
+```
+
+- 若不是 `running`，重新执行 `./打包并安装.sh`
+- 若 Helper 运行但仍有 0°C：
+  - 多半是该机型下对应键无效，属于传感器可用性问题，不是 UI 格式化问题
+  - 优先查看可用传感器扫描结果，再决定是否把该键加入黑名单/白名单
+
+### 2) 风扇控制无效
+
+- 确认当前不是冲突模式
+- 切到 `性能` 模式验证是否能拉满转速
+- 查看 Helper 日志与连接状态
+
+### 3) 构建目录权限异常
+
+若历史构建目录含 root 文件，清理：
+
+```bash
+sudo rm -rf Build
+```
+
+## 安全说明
+
+- 项目以本机使用为前提设计
+- 不上传温度与风扇数据到远端
+- Helper 仅用于 SMC 读写能力，不承载业务 UI 逻辑
+
+## License
+
+当前仓库未单独提供开源许可证文件；若需要对外发布，请先补充 `LICENSE` 与分发策略。

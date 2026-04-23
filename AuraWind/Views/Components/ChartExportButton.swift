@@ -33,6 +33,9 @@ struct ChartExportButton: View {
     
     /// 当前配色方案
     @Environment(\.colorScheme) private var colorScheme
+
+    /// 当前稳定可用的导出格式
+    private let supportedFormats: [ChartExportFormat] = [.csv]
     
     // MARK: - Initialization
     
@@ -64,6 +67,16 @@ struct ChartExportButton: View {
         .onChange(of: exportVM.shouldShowProgress) { _, show in
             withAnimation(.easeInOut(duration: 0.2)) {
                 showProgress = show
+            }
+        }
+        .onChange(of: exportVM.lastExportedFile) { _, fileURL in
+            guard let fileURL else { return }
+            NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+        }
+        .onAppear {
+            if !supportedFormats.contains(exportVM.selectedFormat),
+               let fallback = supportedFormats.first {
+                exportVM.selectedFormat = fallback
             }
         }
     }
@@ -108,7 +121,7 @@ struct ChartExportButton: View {
         Group {
             // 快速导出选项
             Section("快速导出") {
-                ForEach(ChartExportFormat.allCases, id: \.self) { format in
+                ForEach(supportedFormats, id: \.self) { format in
                     Button {
                         performQuickExport(format: format)
                     } label: {
@@ -221,7 +234,7 @@ struct ChartExportButton: View {
                 .font(.headline)
             
             Picker("格式", selection: $exportVM.selectedFormat) {
-                ForEach(ChartExportFormat.allCases, id: \.self) { format in
+                ForEach(supportedFormats, id: \.self) { format in
                     Text(format.description)
                         .tag(format)
                 }
@@ -342,12 +355,7 @@ struct ChartExportButton: View {
     }
     
     private var selectedFormatSupportsImageSettings: Bool {
-        switch exportVM.selectedFormat {
-        case .png, .svg:
-            return true
-        case .csv:
-            return false
-        }
+        [.png, .svg].contains(exportVM.selectedFormat)
     }
     
     // MARK: - Actions

@@ -1,16 +1,17 @@
-# Documentation
-README.md
-CHANGELOG.md
-docs/
-
-# Xcode
-*.xcuserstate
-*.xcworkspace/xcuserdata/
+# macOS
 .DS_Store
 
-# Build
+# Xcode user files
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Build artifacts
 build/
+Build/
 DerivedData/
+*.xcarchive
+*.app
 
 # Swift Package Manager
 .swiftpm/

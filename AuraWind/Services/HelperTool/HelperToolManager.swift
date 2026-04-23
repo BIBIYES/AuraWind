@@ -32,6 +32,13 @@ final class HelperToolManager {
     /// Helper Tool 代理
     private var helperProxy: HelperToolProtocol?
     
+    /// 系统安装路径
+    private let helperInstallPath = "/Library/PrivilegedHelperTools/\(HelperToolConstants.helperToolBundleID)"
+    private let launchdInstallPath = "/Library/LaunchDaemons/\(HelperToolConstants.helperToolBundleID).plist"
+    
+    /// 本机模式默认不走 SMJobBless（避免依赖开发者签名链）
+    private let autoInstallWithSMJobBless = false
+    
     // MARK: - Initialization
     
     private init() {
@@ -47,25 +54,15 @@ final class HelperToolManager {
     
     /// 检查 Helper Tool 是否已安装
     func checkInstallation() {
-        // 尝试连接来检查是否已安装
-        let testConnection = NSXPCConnection(machServiceName: HelperToolConstants.helperToolMachServiceName, options: .privileged)
-        testConnection.remoteObjectInterface = NSXPCInterface(with: HelperToolProtocol.self)
-        testConnection.resume()
+        refreshInstallationState()
         
-        let proxy = testConnection.remoteObjectProxyWithErrorHandler { error in
-            print("Helper Tool 未安装或无法连接: \(error)")
-        } as? HelperToolProtocol
-        
-        proxy?.getVersion { version in
-            print("Helper Tool 已安装，版本: \(version)")
-            Task { @MainActor in
+        Task { @MainActor in
+            do {
+                _ = try await requestVersion(timeout: 1.0)
                 self.isInstalled = true
+            } catch {
+                print("Helper Tool 尚不可用: \(error.localizedDescription)")
             }
-        }
-        
-        // 短暂延迟后关闭测试连接
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            testConnection.invalidate()
         }
     }
     
@@ -169,19 +166,64 @@ final class HelperToolManager {
     
     /// 连接到 Helper Tool
     func connect() async throws {
-        if !isInstalled {
-            // 如果未安装，尝试安装
-            try await install()
-        }
-        
         guard !isConnected else {
             print("已连接到 Helper Tool")
             return
         }
         
+        do {
+            try await establishConnection()
+            return
+        } catch {
+            print("首次连接失败: \(error.localizedDescription)")
+        }
+        
+        refreshInstallationState()
+        
+        if !isInstalled {
+            if autoInstallWithSMJobBless {
+                try await install()
+                try await establishConnection()
+                return
+            }
+            
+            throw NSError(
+                domain: HelperToolConstants.xpcErrorDomain,
+                code: HelperToolError.manualInstallRequired.rawValue,
+                userInfo: [
+                    NSLocalizedDescriptionKey: """
+                    Helper Tool 未安装。请先运行项目根目录下的打包脚本进行本机安装：
+                    ./打包并安装.sh
+                    """
+                ]
+            )
+        }
+        
+        throw HelperToolError.connectionFailed
+    }
+    
+    /// 断开连接
+    func disconnect() {
+        print("断开 Helper Tool 连接...")
+        
+        connection?.invalidate()
+        connection = nil
+        helperProxy = nil
+        isConnected = false
+    }
+    
+    // MARK: - Private Helpers
+    
+    private func refreshInstallationState() {
+        let fileManager = FileManager.default
+        let helperExists = fileManager.fileExists(atPath: helperInstallPath)
+        let plistExists = fileManager.fileExists(atPath: launchdInstallPath)
+        isInstalled = helperExists && plistExists
+    }
+    
+    private func establishConnection() async throws {
         print("连接到 Helper Tool...")
         
-        // 创建 XPC 连接
         let newConnection = NSXPCConnection(
             machServiceName: HelperToolConstants.helperToolMachServiceName,
             options: .privileged
@@ -208,31 +250,74 @@ final class HelperToolManager {
         
         newConnection.resume()
         
-        connection = newConnection
-        helperProxy = newConnection.remoteObjectProxyWithErrorHandler { error in
-            print("XPC 代理错误: \(error)")
-        } as? HelperToolProtocol
-        
-        // 验证连接
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            helperProxy?.getVersion { version in
-                print("✅ 已连接到 Helper Tool，版本: \(version)")
-                Task { @MainActor in
-                    self.isConnected = true
-                }
-                continuation.resume()
+        do {
+            let version = try await requestVersion(using: newConnection, timeout: 2.0)
+            guard let proxy = newConnection.remoteObjectProxyWithErrorHandler({ error in
+                print("XPC 代理错误: \(error)")
+            }) as? HelperToolProtocol else {
+                newConnection.invalidate()
+                throw HelperToolError.connectionFailed
             }
+            
+            connection = newConnection
+            helperProxy = proxy
+            isConnected = true
+            isInstalled = true
+            
+            print("✅ 已连接到 Helper Tool，版本: \(version)")
+        } catch {
+            newConnection.invalidate()
+            throw error
         }
     }
     
-    /// 断开连接
-    func disconnect() {
-        print("断开 Helper Tool 连接...")
+    private func requestVersion(timeout: TimeInterval) async throws -> String {
+        let testConnection = NSXPCConnection(
+            machServiceName: HelperToolConstants.helperToolMachServiceName,
+            options: .privileged
+        )
+        testConnection.remoteObjectInterface = NSXPCInterface(with: HelperToolProtocol.self)
+        testConnection.resume()
+        defer { testConnection.invalidate() }
         
-        connection?.invalidate()
-        connection = nil
-        helperProxy = nil
-        isConnected = false
+        return try await requestVersion(using: testConnection, timeout: timeout)
+    }
+    
+    private func requestVersion(using connection: NSXPCConnection, timeout: TimeInterval) async throws -> String {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
+            let lock = NSLock()
+            var hasResumed = false
+            
+            func resumeOnce(_ result: Result<String, Error>) {
+                lock.lock()
+                defer { lock.unlock() }
+                
+                guard !hasResumed else { return }
+                hasResumed = true
+                
+                switch result {
+                case .success(let version):
+                    continuation.resume(returning: version)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+            guard let proxy = connection.remoteObjectProxyWithErrorHandler({ error in
+                resumeOnce(.failure(error))
+            }) as? HelperToolProtocol else {
+                resumeOnce(.failure(HelperToolError.connectionFailed))
+                return
+            }
+            
+            proxy.getVersion { version in
+                resumeOnce(.success(version))
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
+                resumeOnce(.failure(HelperToolError.connectionFailed))
+            }
+        }
     }
     
     // MARK: - SMC Operations

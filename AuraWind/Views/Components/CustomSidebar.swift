@@ -165,8 +165,8 @@ struct CustomSidebar<Content: View>: View {
     
     private var headerSection: some View {
         VStack(spacing: 12) {
-            // Logo图标 - 使用彩色SVG
-            Image("ColorfulIcon")
+            // Logo图标 - 使用项目主 Logo
+            Image("AppLogo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 48, height: 48)

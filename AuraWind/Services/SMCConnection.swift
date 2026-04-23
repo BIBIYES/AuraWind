@@ -127,19 +127,22 @@ final class SMCConnection {
         // 获取键信息
         var output = SMCKeyData()
         try performSMCCall(input: &input, output: &output)
+        let keyInfo = output.keyInfo
         
         // 读取实际数据
         input.data8 = SMC_CMD_READ_BYTES
-        input.keyInfo.dataSize = output.keyInfo.dataSize
+        input.keyInfo.dataSize = keyInfo.dataSize
+        input.data32 = keyInfo.dataSize
         try performSMCCall(input: &input, output: &output)
         
         // 解析数据
-        let bytes = extractBytes(from: output, size: Int(output.keyInfo.dataSize))
-        let value = parseSMCValue(bytes: bytes, type: type)
+        let bytes = extractBytes(from: output, size: Int(keyInfo.dataSize))
+        let actualType = resolveDataType(from: keyInfo.dataType, fallback: type)
+        let value = parseSMCValue(bytes: bytes, type: actualType)
         
         return SMCValue(
             key: key,
-            dataType: type,
+            dataType: actualType,
             value: value,
             bytes: bytes
         )
@@ -164,7 +167,8 @@ final class SMCConnection {
         try performSMCCall(input: &input, output: &output)
         
         // 准备写入数据
-        let bytes = convertValueToBytes(value: value, type: type, size: Int(output.keyInfo.dataSize))
+        let actualType = resolveDataType(from: output.keyInfo.dataType, fallback: type)
+        let bytes = convertValueToBytes(value: value, type: actualType, size: Int(output.keyInfo.dataSize))
         
         input.data8 = SMC_CMD_WRITE_BYTES
         input.keyInfo.dataSize = output.keyInfo.dataSize
@@ -183,8 +187,13 @@ final class SMCConnection {
     
     /// 执行SMC调用
     private func performSMCCall(input: inout SMCKeyData, output: inout SMCKeyData) throws {
-        let inputSize = MemoryLayout<SMCKeyData>.size
-        var outputSize = MemoryLayout<SMCKeyData>.size
+        let inputSize = MemoryLayout<SMCKeyData>.stride
+        var outputSize = MemoryLayout<SMCKeyData>.stride
+        
+        guard inputSize == expectedSMCKeyDataSize else {
+            // SMC user client 对结构体布局非常敏感，尺寸不匹配会直接返回参数错误。
+            throw AuraWindError.invalidConfiguration
+        }
         
         let result = IOConnectCallStructMethod(
             connection,
@@ -217,7 +226,7 @@ final class SMCConnection {
         case .flt:
             // 浮点数
             guard bytes.count >= 4 else { return 0.0 }
-            return Double(Float(bitPattern: UInt32(bytes: Array(bytes.prefix(4)))))
+            return Double(Float(bitPattern: UInt32(littleEndianBytes: Array(bytes.prefix(4)))))
             
         case .ui8:
             // 8位无符号整数
@@ -247,13 +256,25 @@ final class SMCConnection {
         }
     }
     
+    /// 从 SMC keyInfo 的 dataType 字段推断真实类型
+    private func resolveDataType(from rawType: UInt32, fallback: SMCDataType) -> SMCDataType {
+        let typeString = String(bytes: [
+            UInt8((rawType >> 24) & 0xFF),
+            UInt8((rawType >> 16) & 0xFF),
+            UInt8((rawType >> 8) & 0xFF),
+            UInt8(rawType & 0xFF)
+        ], encoding: .ascii) ?? ""
+        
+        return SMCDataType(rawValue: typeString) ?? fallback
+    }
+    
     /// 转换值为字节数据
     private func convertValueToBytes(value: Double, type: SMCDataType, size: Int) -> [UInt8] {
         switch type {
         case .flt:
             // 浮点数
             let floatValue = Float(value)
-            return floatValue.bitPattern.bytes
+            return floatValue.bitPattern.littleEndianBytes
             
         case .ui8:
             // 8位无符号整数
@@ -286,26 +307,44 @@ final class SMCConnection {
 
 /// SMC键数据结构 (80 bytes total)
 private struct SMCKeyData {
-    var key: UInt32 = 0                    // 4 bytes
-    var vers: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0, 0, 0)  // 6 bytes
-    var pLimitData: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
-                     UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0, 0, 0, 0, 0,
-                                                                                  0, 0, 0, 0, 0, 0, 0, 0)  // 16 bytes
-    var keyInfo = SMCKeyInfoData()         // 6 bytes
-    var result: UInt8 = 0                  // 1 byte
-    var status: UInt8 = 0                  // 1 byte
-    var data8: UInt8 = 0                   // 1 byte
-    var data32: UInt32 = 0                 // 4 bytes
-    var bytes = SMCBytes()                 // 32 bytes
-    var padding: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0, 0, 0, 0, 0, 0)  // 9 bytes
+    var key: UInt32 = 0
+    var vers = SMCVersion()
+    var pLimitData = SMCPLimitData()
+    var keyInfo = SMCKeyInfoData()
+    var result: UInt8 = 0
+    var status: UInt8 = 0
+    var data8: UInt8 = 0
+    var padding1: UInt8 = 0
+    var data32: UInt32 = 0
+    var bytes = SMCBytes()
 }
 
-/// SMC键信息数据结构 (6 bytes total)
+/// SMC版本结构 (8 bytes)
+private struct SMCVersion {
+    var major: UInt8 = 0
+    var minor: UInt8 = 0
+    var build: UInt8 = 0
+    var reserved: UInt8 = 0
+    var release: UInt16 = 0
+}
+
+/// SMC功耗限制结构 (16 bytes)
+private struct SMCPLimitData {
+    var version: UInt16 = 0
+    var length: UInt16 = 0
+    var cpuPLimit: UInt32 = 0
+    var gpuPLimit: UInt32 = 0
+    var memPLimit: UInt32 = 0
+}
+
+/// SMC键信息数据结构 (12 bytes, 含对齐填充)
 private struct SMCKeyInfoData {
-    var dataSize: UInt32 = 0               // 4 bytes
-    var dataType: UInt32 = 0               // 4 bytes (但只用低 2 bytes)
-    var dataAttributes: UInt8 = 0          // 1 byte
-    var padding: UInt8 = 0                 // 1 byte padding
+    var dataSize: UInt32 = 0
+    var dataType: UInt32 = 0
+    var dataAttributes: UInt8 = 0
+    var pad0: UInt8 = 0
+    var pad1: UInt8 = 0
+    var pad2: UInt8 = 0
 }
 
 /// SMC字节数组
@@ -402,6 +441,7 @@ private let KERNEL_INDEX_SMC: UInt32 = 2
 private let SMC_CMD_READ_KEYINFO: UInt8 = 9
 private let SMC_CMD_READ_BYTES: UInt8 = 5
 private let SMC_CMD_WRITE_BYTES: UInt8 = 6
+private let expectedSMCKeyDataSize = 80
 
 // MARK: - 扩展辅助方法
 
@@ -447,6 +487,27 @@ private extension UInt32 {
             UInt8((self >> 16) & 0xFF),
             UInt8((self >> 8) & 0xFF),
             UInt8(self & 0xFF)
+        ]
+    }
+
+    /// 从小端字节数组初始化
+    init(littleEndianBytes: [UInt8]) {
+        self = 0
+        if littleEndianBytes.count >= 4 {
+            self = UInt32(littleEndianBytes[0])
+                | UInt32(littleEndianBytes[1]) << 8
+                | UInt32(littleEndianBytes[2]) << 16
+                | UInt32(littleEndianBytes[3]) << 24
+        }
+    }
+
+    /// 转换为小端字节数组
+    var littleEndianBytes: [UInt8] {
+        return [
+            UInt8(self & 0xFF),
+            UInt8((self >> 8) & 0xFF),
+            UInt8((self >> 16) & 0xFF),
+            UInt8((self >> 24) & 0xFF)
         ]
     }
 }

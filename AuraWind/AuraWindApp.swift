@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+final class AuraWindAppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        false
+    }
+}
+
 @main
 struct AuraWindApp: App {
     
@@ -14,6 +20,7 @@ struct AuraWindApp: App {
     
     private static let sharedSMCService = SMCServiceWithHelper()
     private static let sharedPersistenceService = PersistenceService()
+    @NSApplicationDelegateAdaptor(AuraWindAppDelegate.self) private var appDelegate
     
     // MARK: - State
     
@@ -29,13 +36,12 @@ struct AuraWindApp: App {
     
     @State private var showPermissionView = false
     @State private var permissionGranted = true
-    @State private var debugInfo: String = "等待初始化..."
     
     // MARK: - Body
     
     var body: some Scene {
         // 主窗口
-        WindowGroup {
+        WindowGroup(id: "main") {
             if showPermissionView && !permissionGranted {
                 SMCPermissionView {
                     permissionGranted = true
@@ -43,19 +49,12 @@ struct AuraWindApp: App {
                     initializeServices()
                 }
             } else {
-                VStack {
-                    Text("调试信息：\(debugInfo)")
-                        .padding()
-                        .background(Color.yellow.opacity(0.3))
-                    
-                    MainView(
-                        fanViewModel: fanViewModel,
-                        tempViewModel: tempViewModel
-                    )
-                }
+                MainView(
+                    fanViewModel: fanViewModel,
+                    tempViewModel: tempViewModel
+                )
                 .onAppear {
                     // 使用 Helper Tool 时，直接初始化服务
-                    debugInfo = "MainView 已出现，开始初始化..."
                     NSLog("[AuraWindApp] MainView appeared, initializing services...")
                     initializeServices()
                     
@@ -76,7 +75,7 @@ struct AuraWindApp: App {
         }
         
         // 菜单栏图标
-        MenuBarExtra("AuraWind", systemImage: "wind") {
+        MenuBarExtra("AuraWind", image: "MenuBarIcon") {
             MenuBarView(
                 fanViewModel: fanViewModel,
                 tempViewModel: tempViewModel
@@ -106,32 +105,25 @@ struct AuraWindApp: App {
     /// 初始化服务
     private func initializeServices() {
         Task {
-            debugInfo = "🚀 开始初始化服务..."
             print("🚀 开始初始化服务...")
             
             // 启动 SMC 服务（使用 Helper Tool）
             do {
-                debugInfo = "正在启动 SMC 服务..."
                 try await Self.sharedSMCService.start()
-                debugInfo = "✅ SMC 服务已启动"
                 print("✅ SMC 服务已启动")
             } catch {
-                debugInfo = "❌ SMC 服务启动失败: \(error.localizedDescription)"
                 print("❌ SMC 服务启动失败: \(error)")
                 return // 如果 SMC 启动失败，不继续
             }
             
             // 启动温度监控
-            debugInfo = "正在初始化温度传感器..."
             await tempViewModel.initializeSensors()
             tempViewModel.startMonitoring()
             
             // 启动风扇控制
-            debugInfo = "正在初始化风扇..."
             await fanViewModel.initializeFans()
             fanViewModel.startMonitoring()
             
-            debugInfo = "✅ 所有服务初始化完成"
             print("✅ 所有服务初始化完成")
         }
     }
@@ -144,6 +136,8 @@ struct MenuBarView: View {
     @ObservedObject var tempViewModel: TemperatureMonitorViewModel
     @Environment(\.openWindow) private var openWindow
     @Environment(\.colorScheme) private var colorScheme
+    @State private var manualRPMInput = ""
+    @State private var manualRPMFeedback: String?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -277,13 +271,110 @@ struct MenuBarView: View {
                 .padding(.top, 12)
             
             VStack(spacing: 4) {
-                modeButton("静音模式", .silent, "1", "speaker.wave.1")
-                modeButton("平衡模式", .balanced, "2", "scale.3d")
-                modeButton("性能模式", .performance, "3", "bolt.fill")
+                manualModeCard("手动模式", "1", "hand.raised.fill")
+                modeButton("静音模式", .silent, "2", "speaker.wave.1")
+                modeButton("平衡模式", .balanced, "3", "scale.3d")
+                modeButton("性能模式", .performance, "4", "bolt.fill")
             }
             .padding(.horizontal, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.bottom, 12)
+    }
+
+    private func manualModeCard(_ title: String, _ shortcut: String, _ icon: String) -> some View {
+        VStack(spacing: 0) {
+            Button {
+                Task {
+                    await fanViewModel.changeMode(.manual)
+                }
+            } label: {
+                modeRow(title: title, shortcut: shortcut, icon: icon)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .keyboardShortcut(KeyEquivalent(shortcut.first!))
+
+            if fanViewModel.currentMode == .manual {
+                Divider()
+                    .padding(.horizontal, 12)
+
+                manualRPMEditorSection
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(fanViewModel.currentMode == .manual ?
+                    (colorScheme == .dark ? Color.auraLogoBlue.opacity(0.2) : Color.auraLogoBlue.opacity(0.1)) :
+                    Color.clear)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(
+                    fanViewModel.currentMode == .manual ?
+                    Color.auraLogoBlue.opacity(0.5) :
+                    Color.clear,
+                    lineWidth: 1
+                )
+        )
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+    }
+
+    private var manualRPMEditorSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                TextField("输入 RPM（如 3200）", text: $manualRPMInput)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 130)
+                    .onSubmit {
+                        applyManualRPMFromInput()
+                    }
+                    .onChange(of: manualRPMInput) { _ in
+                        manualRPMFeedback = nil
+                    }
+
+                Button("应用") {
+                    applyManualRPMFromInput()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .disabled(manualRPMInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                Spacer()
+
+                if let range = manualRPMRange {
+                    Text("\(range.lowerBound)-\(range.upperBound)")
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            if let manualRPMFeedback {
+                Text(manualRPMFeedback)
+                    .font(.system(size: 10))
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+
+    private var manualRPMRange: ClosedRange<Int>? {
+        guard !fanViewModel.fans.isEmpty else {
+            return nil
+        }
+
+        let minAllowed = fanViewModel.fans.map(\.minSpeed).max() ?? 0
+        let maxAllowed = fanViewModel.fans.map(\.maxSpeed).min() ?? 0
+        guard minAllowed <= maxAllowed else {
+            return nil
+        }
+
+        return minAllowed ... maxAllowed
     }
     
     private func modeButton(_ title: String, _ mode: FanControlViewModel.FanMode, _ shortcut: String, _ icon: String) -> some View {
@@ -292,51 +383,62 @@ struct MenuBarView: View {
                 await fanViewModel.changeMode(mode)
             }
         } label: {
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 12))
-                    .frame(width: 14, height: 14)
-                
-                Text(title)
-                    .font(.system(size: 13))
-                
-                Spacer()
-                
-                Text(shortcut)
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(colorScheme == .dark ? Color.white.opacity(0.1) : Color.black.opacity(0.05))
-                    )
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(fanViewModel.currentMode == mode ?
-                        (colorScheme == .dark ? Color.auraLogoBlue.opacity(0.2) : Color.auraLogoBlue.opacity(0.1)) :
-                        Color.clear)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(
-                        fanViewModel.currentMode == mode ?
-                        Color.auraLogoBlue.opacity(0.5) :
-                        Color.clear,
-                        lineWidth: 1
-                    )
-            )
+            modeRow(title: title, shortcut: shortcut, icon: icon)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
         }
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(fanViewModel.currentMode == mode ?
+                    (colorScheme == .dark ? Color.auraLogoBlue.opacity(0.2) : Color.auraLogoBlue.opacity(0.1)) :
+                    Color.clear)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(
+                    fanViewModel.currentMode == mode ?
+                    Color.auraLogoBlue.opacity(0.5) :
+                    Color.clear,
+                    lineWidth: 1
+                )
+        )
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .buttonStyle(.plain)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .keyboardShortcut(KeyEquivalent(shortcut.first!))
+    }
+
+    private func modeRow(title: String, shortcut: String, icon: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 12))
+                .frame(width: 14, height: 14)
+            
+            Text(title)
+                .font(.system(size: 13))
+            
+            Spacer()
+            
+            Text(shortcut)
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(colorScheme == .dark ? Color.white.opacity(0.1) : Color.black.opacity(0.05))
+                )
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var actionSection: some View {
         VStack(spacing: 0) {
             actionButton("打开主窗口", "macwindow", "o") {
+                openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             }
             
@@ -375,8 +477,48 @@ struct MenuBarView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .keyboardShortcut(KeyEquivalent(shortcut.first!))
+    }
+
+    private func applyManualRPMFromInput() {
+        let input = manualRPMInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let rpm = Int(input) else {
+            manualRPMFeedback = "请输入有效数字"
+            return
+        }
+
+        guard !fanViewModel.fans.isEmpty else {
+            manualRPMFeedback = "暂无风扇数据"
+            return
+        }
+
+        Task {
+            await fanViewModel.changeMode(.manual)
+
+            var hasClampedFan = false
+            for (offset, fan) in fanViewModel.fans.enumerated() {
+                let targetRPM = min(max(rpm, fan.minSpeed), fan.maxSpeed)
+                hasClampedFan = hasClampedFan || (targetRPM != rpm)
+                await fanViewModel.setFanSpeed(fanIndex: offset, rpm: targetRPM)
+            }
+
+            if hasClampedFan {
+                if let range = manualRPMRange {
+                    manualRPMFeedback = "已应用，超出范围时自动限制到 \(range.lowerBound)-\(range.upperBound)"
+                } else {
+                    manualRPMFeedback = "已应用（部分风扇已按可用范围限制）"
+                }
+            } else {
+                manualRPMFeedback = "已应用到全部风扇"
+            }
+
+            manualRPMInput = "\(rpm)"
+        }
     }
 }

@@ -63,6 +63,18 @@ final class TemperatureMonitorViewModel: BaseViewModel {
     
     /// 最大图表数据点数
     private let maxChartDataPoints: Int = 3000 // 支持更长时间的数据展示
+
+    /// 图表显示时的最大点数（避免 Swift Charts 在大数据量下卡顿）
+    private let maxDisplayChartDataPoints: Int = 800
+
+    /// 自动标注最短刷新间隔
+    private let autoAnnotationInterval: TimeInterval = 20.0
+
+    /// 自动标注分析的最大点数
+    private let autoAnnotationMaxDataPoints: Int = 400
+
+    /// 上次自动标注时间
+    private var lastAutoAnnotationTime: Date = .distantPast
     
     // MARK: - Initialization
     
@@ -116,33 +128,50 @@ final class TemperatureMonitorViewModel: BaseViewModel {
     /// 刷新温度数据
     func refreshTemperature() async {
         await performAsyncOperation {
-            for (index, sensor) in self.sensors.enumerated() {
-                let sensorType = TemperatureSensorType(
-                    rawValue: sensor.type.rawValue
-                ) ?? .cpuProximity
+            // 直接按实际可用传感器键刷新，避免将 Apple Silicon 传感器错误回退到 TC0P。
+            let latestSensors = try await self.smcService.getAllTemperatures()
+            let now = Date()
+            
+            var existingByIdentity: [String: TemperatureSensor] = [:]
+            for sensor in self.sensors {
+                existingByIdentity[self.sensorIdentity(for: sensor)] = sensor
+            }
+            
+            var updatedSensors: [TemperatureSensor] = []
+            updatedSensors.reserveCapacity(latestSensors.count)
+            
+            for latest in latestSensors {
+                // 过滤无效温度，避免 0°C 传感器污染图表和统计。
+                guard latest.currentTemperature > 0 else { continue }
+
+                let identity = self.sensorIdentity(for: latest)
+                var merged = existingByIdentity[identity] ?? latest
                 
-                let temp = try await self.smcService.readTemperature(sensor: sensorType)
+                merged.type = latest.type
+                merged.name = latest.name
+                merged.currentTemperature = latest.currentTemperature
+                merged.maxTemperature = latest.maxTemperature
+                merged.smcKey = latest.smcKey
                 
-                // 更新传感器温度
-                self.sensors[index].currentTemperature = temp
-                
-                // 添加历史记录
                 let reading = TemperatureReading(
-                    timestamp: Date(),
-                    value: temp
+                    timestamp: now,
+                    value: latest.currentTemperature
                 )
-                self.sensors[index].addReading(reading)
+                merged.addReading(reading)
+                updatedSensors.append(merged)
                 
-                // 添加到图表数据
                 let chartPoint = ChartDataPoint(
                     timestamp: reading.timestamp,
-                    value: temp,
-                    label: sensor.name,
+                    value: latest.currentTemperature,
+                    label: merged.name,
                     type: .temperature
                 )
                 self.addChartDataPoint(chartPoint)
-                
-                // 限制历史记录数量
+            }
+            
+            self.sensors = updatedSensors
+            
+            for index in self.sensors.indices {
                 self.limitHistorySize(sensorIndex: index)
             }
             
@@ -150,7 +179,7 @@ final class TemperatureMonitorViewModel: BaseViewModel {
             self.checkTemperatureWarning()
             
             // 自动检测数据标注
-            self.autoDetectAnnotations()
+            self.autoDetectAnnotations(now: now)
         }
     }
     
@@ -193,7 +222,7 @@ final class TemperatureMonitorViewModel: BaseViewModel {
         
         // 创建临时文件
         let tempDir = FileManager.default.temporaryDirectory
-        let filename = "AuraWind_Temperature_\(Date().ISO8601Format()).csv"
+        let filename = "AuraWind_Temperature_\(Date().compactTimestamp()).csv"
         let fileURL = tempDir.appendingPathComponent(filename)
         
         // 写入文件
@@ -271,7 +300,8 @@ final class TemperatureMonitorViewModel: BaseViewModel {
     /// 获取当前选中范围的图表数据
     /// - Returns: 图表数据点数组
     func getCurrentChartData() -> [ChartDataPoint] {
-        getChartData(for: selectedSensorLabels, in: selectedTimeRange)
+        let filtered = getChartData(for: selectedSensorLabels, in: selectedTimeRange)
+        return downsampleForDisplay(filtered, maxPoints: maxDisplayChartDataPoints)
     }
     
     /// 获取所有可用的传感器标签
@@ -374,6 +404,11 @@ final class TemperatureMonitorViewModel: BaseViewModel {
         try? persistenceService.save(historyDuration, forKey: "temperatureHistoryDuration")
         try? persistenceService.save(selectedTimeRange.rawValue, forKey: "selectedTimeRange")
     }
+
+    /// 为传感器生成稳定标识（优先使用 SMC 键）
+    private func sensorIdentity(for sensor: TemperatureSensor) -> String {
+        sensor.smcKey ?? sensor.name
+    }
     
     /// 添加图表数据点
     private func addChartDataPoint(_ point: ChartDataPoint) {
@@ -443,11 +478,26 @@ final class TemperatureMonitorViewModel: BaseViewModel {
     // MARK: - Data Annotation Methods
     
     /// 自动检测数据标注
-    private func autoDetectAnnotations() {
+    private func autoDetectAnnotations(now: Date = Date()) {
+        guard annotationManager.isAutoAnnotationEnabled else { return }
+        guard now.timeIntervalSince(lastAutoAnnotationTime) >= autoAnnotationInterval else { return }
+
         let currentData = getCurrentChartData()
         guard !currentData.isEmpty else { return }
-        
-        annotationManager.autoDetectAnnotations(for: currentData, type: .temperature)
+        lastAutoAnnotationTime = now
+
+        let dataForAnalysis = downsampleForDisplay(currentData, maxPoints: autoAnnotationMaxDataPoints)
+        annotationManager.autoDetectAnnotations(for: dataForAnalysis, type: .temperature)
+    }
+
+    /// 图表显示降采样（按固定步长抽样，降低渲染成本）
+    private func downsampleForDisplay(_ points: [ChartDataPoint], maxPoints: Int) -> [ChartDataPoint] {
+        guard maxPoints > 0, points.count > maxPoints else { return points }
+
+        let stride = max(1, Int(ceil(Double(points.count) / Double(maxPoints))))
+        return points.enumerated().compactMap { index, point in
+            index % stride == 0 ? point : nil
+        }
     }
     
     /// 获取当前可见的标注
@@ -487,6 +537,12 @@ final class TemperatureMonitorViewModel: BaseViewModel {
 // MARK: - Date Extension
 
 private extension Date {
+    func compactTimestamp() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd_HHmmss"
+        return formatter.string(from: self)
+    }
+
     func ISO8601Format() -> String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]

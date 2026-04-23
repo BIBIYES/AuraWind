@@ -21,6 +21,14 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
     
     /// 是否已连接到 SMC
     private var isConnected = false
+
+    /// 传感器列表缓存，减少重复全量扫描
+    private var cachedAvailableSensors: [String] = []
+    private var sensorCacheTimestamp: Date = .distantPast
+    private let sensorCacheTTL: TimeInterval = 15.0
+
+    /// 调试日志开关（默认关闭，避免高频日志拖慢系统）
+    private let verboseLoggingEnabled = ProcessInfo.processInfo.environment["AURAWIND_HELPER_VERBOSE"] == "1"
     
     // MARK: - Lifecycle
     
@@ -88,6 +96,8 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
             
             smcConnection = connection
             isConnected = true
+            cachedAvailableSensors = []
+            sensorCacheTimestamp = .distantPast
             
             log("✅ SMC 连接成功")
             reply(true, nil)
@@ -104,6 +114,8 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
         smcConnection?.disconnect()
         smcConnection = nil
         isConnected = false
+        cachedAvailableSensors = []
+        sensorCacheTimestamp = .distantPast
         
         log("SMC 已断开")
         reply()
@@ -112,7 +124,7 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
     // MARK: - HelperToolProtocol - SMC 读取操作
     
     func readSMCKey(_ key: String, reply: @escaping (Double, String?) -> Void) {
-        log("读取 SMC 键: \(key)")
+        log("读取 SMC 键: \(key)", level: .verbose)
         
         guard isConnected, let connection = smcConnection else {
             log("❌ SMC 未连接")
@@ -125,7 +137,7 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
             let dataType = inferDataType(for: key)
             let result = try connection.readValue(key: key, type: dataType)
             
-            log("✅ 读取成功: \(key) = \(result.value)")
+            log("✅ 读取成功: \(key) = \(result.value)", level: .verbose)
             reply(result.value, nil)
             
         } catch {
@@ -135,47 +147,53 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
     }
     
     func readTemperature(sensorKey: String, reply: @escaping (Double, String?) -> Void) {
-        log("读取温度传感器: \(sensorKey)")
+        log("读取温度传感器: \(sensorKey)", level: .verbose)
         readSMCKey(sensorKey, reply: reply)
     }
     
     func getAllTemperatureSensors(reply: @escaping ([String], String?) -> Void) {
-        log("获取所有温度传感器...")
-        
-        // 常见的温度传感器键
-        let commonSensors = [
-            "TC0P", // CPU 接近传感器
-            "TC0D", // CPU 芯片温度
-            "TC0E", // CPU 核心温度
-            "TC0F", // CPU 核心温度
-            "TG0P", // GPU 接近传感器
-            "TG0D", // GPU 芯片温度
-            "Th0H", // 硬盘温度
-            "Tm0P", // 主板温度
-            "TN0P", // 北桥温度
-            "TA0P", // 环境温度
-            "TB0T", // 电池温度
-        ]
-        
-        var availableSensors: [String] = []
-        
         guard isConnected, let connection = smcConnection else {
             reply([], "SMC 未连接")
             return
         }
         
+        let now = Date()
+        if !cachedAvailableSensors.isEmpty,
+           now.timeIntervalSince(sensorCacheTimestamp) < sensorCacheTTL {
+            log("温度传感器命中缓存: \(cachedAvailableSensors.count) 个", level: .verbose)
+            reply(cachedAvailableSensors, nil)
+            return
+        }
+
+        log("扫描可用温度传感器...")
+
+        let sensorCandidates = preferredTemperatureSensors()
+        var availableSensors: [String] = []
+        var invalidValueCount = 0
+        var readFailureCount = 0
+        
         // 检查哪些传感器可用
-        for sensor in commonSensors {
+        for sensor in sensorCandidates {
             do {
-                let result = try connection.readValue(key: sensor, type: .sp78)
-                availableSensors.append(sensor)
-                log("✅ 传感器可用: \(sensor), 温度: \(result.value)°C")
+                let result = try connection.readValue(key: sensor, type: inferDataType(for: sensor))
+                
+                // 过滤明显无效的温度（Apple Silicon 上部分遗留键会稳定返回 0）
+                if isPlausibleTemperature(result.value) {
+                    availableSensors.append(sensor)
+                } else {
+                    invalidValueCount += 1
+                    log("⚠️ 传感器跳过: \(sensor), 温度值疑似无效: \(result.value)°C", level: .verbose)
+                }
             } catch {
-                log("❌ 传感器不可用: \(sensor), 错误: \(error.localizedDescription)")
+                readFailureCount += 1
+                log("❌ 传感器不可用: \(sensor), 错误: \(error.localizedDescription)", level: .verbose)
             }
         }
-        
-        log("找到 \(availableSensors.count) 个可用传感器")
+
+        cachedAvailableSensors = availableSensors
+        sensorCacheTimestamp = Date()
+
+        log("找到 \(availableSensors.count) 个可用传感器（无效值 \(invalidValueCount) 个，读取失败 \(readFailureCount) 个）")
         
         // 如果没有找到传感器，记录详细错误
         if availableSensors.isEmpty {
@@ -211,7 +229,7 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
     }
     
     func getFanInfo(index: Int, reply: @escaping ([String: Any]?, String?) -> Void) {
-        log("获取风扇 \(index) 信息...")
+        log("获取风扇 \(index) 信息...", level: .verbose)
         
         guard isConnected, let connection = smcConnection else {
             reply(nil, "SMC 未连接")
@@ -232,7 +250,7 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
                 "name": "Fan \(index)"
             ]
             
-            log("✅ 风扇信息: \(info)")
+            log("✅ 风扇信息: \(info)", level: .verbose)
             reply(info, nil)
             
         } catch {
@@ -325,22 +343,64 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
         return .flt
     }
     
+    /// 根据硬件型号返回更可能可用的温度键（Apple Silicon 优先）
+    private func preferredTemperatureSensors() -> [String] {
+        let fallbackKeys = [
+            "TC0P", "TC0D", "TC0E", "TC0F",
+            "TG0P", "TG0D",
+            "Th0H", "Tm0P", "TN0P", "TA0P", "TB0T"
+        ]
+        
+        let model = currentHardwareModel()
+        
+        if model.hasPrefix("MacBookPro18") || model.hasPrefix("MacBookAir10") || model.hasPrefix("Mac12") {
+            return [
+                "Tp09", "Tp0T", "Tp01", "Tp05", "Tp0D", "Tp0H", "Tp0L", "Tp0P", "Tp0X", "Tp0b",
+                "Tg05", "Tg0D", "Tg0L", "Tg0T",
+                "Tm02", "Tm06", "Tm08", "Tm09"
+            ] + fallbackKeys
+        }
+        
+        return fallbackKeys
+    }
+    
+    private func currentHardwareModel() -> String {
+        var size: Int = 0
+        sysctlbyname("hw.model", nil, &size, nil, 0)
+        guard size > 0 else { return "" }
+        
+        var model = [CChar](repeating: 0, count: size)
+        sysctlbyname("hw.model", &model, &size, nil, 0)
+        
+        return String(cString: model)
+    }
+
+    /// 温度值合理性检查（用于过滤无效键）
+    private func isPlausibleTemperature(_ value: Double) -> Bool {
+        value >= 1.0 && value <= 130.0
+    }
+    
     /// 设置日志
     private func setupLogging() {
         // 日志输出到系统日志
         // 可以使用 Console.app 查看
     }
     
+    /// 日志级别
+    private enum LogLevel {
+        case normal
+        case verbose
+    }
+
     /// 记录日志
-    private func log(_ message: String) {
+    private func log(_ message: String, level: LogLevel = .normal) {
+        guard level == .normal || verboseLoggingEnabled else { return }
+
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .medium)
         let logMessage = "[\(timestamp)] SMCHelper: \(message)"
         
-        // 输出到标准输出
+        // 仅写 stdout，避免 stdout/stderr 双写导致日志成倍增长。
         print(logMessage)
-        
-        // 同时写入系统日志
-        NSLog("%@", logMessage)
     }
 }
 

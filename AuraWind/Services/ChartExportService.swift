@@ -59,13 +59,15 @@ class ChartExportService {
         format: ChartExportFormat,
         filename: String
     ) async throws -> URL {
+        let safeFilename = sanitizedFilename(filename)
+
         switch format {
         case .png:
-            return try await exportToPNG(dataPoints: dataPoints, filename: filename)
+            return try await exportToPNG(dataPoints: dataPoints, filename: safeFilename)
         case .svg:
-            return try await exportToSVG(dataPoints: dataPoints, filename: filename)
+            return try await exportToSVG(dataPoints: dataPoints, filename: safeFilename)
         case .csv:
-            return try await exportToCSV(dataPoints: dataPoints, filename: filename)
+            return try await exportToCSV(dataPoints: dataPoints, filename: safeFilename)
         }
     }
     
@@ -98,18 +100,7 @@ class ChartExportService {
         dataPoints: [ChartDataPoint],
         filename: String
     ) async throws -> URL {
-        // 创建临时目录
-        let tempDir = fileManager.temporaryDirectory
-        let fileURL = tempDir.appendingPathComponent("\(filename).png")
-        
-        // 生成CSV数据作为替代（简化实现）
-        let csvContent = generateCSVContent(dataPoints: dataPoints)
-        let csvData = csvContent.data(using: .utf8) ?? Data()
-        
-        // 保存数据
-        try csvData.write(to: fileURL)
-        
-        return fileURL
+        throw ChartExportError.pngGenerationFailed
     }
     
     /// 导出为SVG格式
@@ -117,6 +108,10 @@ class ChartExportService {
         dataPoints: [ChartDataPoint],
         filename: String
     ) async throws -> URL {
+        guard !dataPoints.isEmpty else {
+            throw ChartExportError.svgGenerationFailed
+        }
+
         let tempDir = fileManager.temporaryDirectory
         let fileURL = tempDir.appendingPathComponent("\(filename).svg")
         
@@ -131,6 +126,10 @@ class ChartExportService {
         dataPoints: [ChartDataPoint],
         filename: String
     ) async throws -> URL {
+        guard !dataPoints.isEmpty else {
+            throw ChartExportError.csvGenerationFailed
+        }
+
         let tempDir = fileManager.temporaryDirectory
         let fileURL = tempDir.appendingPathComponent("\(filename).csv")
         
@@ -269,6 +268,14 @@ class ChartExportService {
             "#9013FE", // 紫色
             "#417505"  // 深绿色
         ]
+    }
+
+    /// 清理文件名中的非法字符，避免导出失败
+    private func sanitizedFilename(_ filename: String) -> String {
+        let forbidden = CharacterSet(charactersIn: "/:\\?%*|\"<>")
+        let components = filename.components(separatedBy: forbidden).filter { !$0.isEmpty }
+        let result = components.joined(separator: "_")
+        return result.isEmpty ? "AuraWind_Export" : result
     }
 }
 

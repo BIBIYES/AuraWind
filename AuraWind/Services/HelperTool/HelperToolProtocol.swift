@@ -98,6 +98,7 @@ enum HelperToolError: Int, Error, LocalizedError {
     case smcAccessDenied = 1003
     case invalidParameters = 1004
     case operationFailed = 1005
+    case manualInstallRequired = 1006
     
     var errorDescription: String? {
         switch self {
@@ -113,6 +114,8 @@ enum HelperToolError: Int, Error, LocalizedError {
             return "无效的参数"
         case .operationFailed:
             return "操作失败"
+        case .manualInstallRequired:
+            return "Helper Tool 未安装，请先运行打包并安装脚本"
         }
     }
 }

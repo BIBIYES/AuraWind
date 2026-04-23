@@ -111,7 +111,7 @@ struct FanSpeedChart: View {
                 }
             }
             .chartXAxis {
-                AxisMarks(values: .stride(by: xAxisStride)) { value in
+                AxisMarks(values: .automatic(desiredCount: xAxisDesiredTickCount)) { value in
                     if let date = value.as(Date.self) {
                         AxisGridLine(stroke: StrokeStyle(
                             lineWidth: showGrid ? 0.5 : 0,
@@ -297,26 +297,22 @@ struct FanSpeedChart: View {
         } else if timeSpan > 3600 {
             return "HH:mm"        // 1-12小时，显示时:分
         } else {
-            return "HH:mm:ss"     // 小于1小时，显示时:分:秒
+            return "HH:mm:ss"     // 小于1小时，显示真实系统时钟
         }
     }
     
-    /// X轴刻度间隔
-    private var xAxisStride: Calendar.Component {
-        guard !dataPoints.isEmpty else { return .minute }
-        
+    /// X轴建议刻度数量
+    private var xAxisDesiredTickCount: Int {
+        guard !dataPoints.isEmpty else { return 4 }
         let timeSpan = calculateTimeSpan()
-        return getCalendarComponent(for: timeSpan)
-    }
-    
-    /// 根据时间跨度获取日历组件
-    private func getCalendarComponent(for timeSpan: TimeInterval) -> Calendar.Component {
         if timeSpan > 3600 * 12 {
-            return .hour
+            return 6
         } else if timeSpan > 3600 {
-            return .minute
+            return 5
+        } else if timeSpan > 600 {
+            return 4
         } else {
-            return .second
+            return 3
         }
     }
     

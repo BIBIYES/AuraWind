@@ -287,7 +287,7 @@ struct PerformanceMonitorView: View {
                     Task {
                         do {
                             let url = try await viewModel.exportPerformanceData()
-                            print("性能数据已导出到: \(url.path)")
+                            NSWorkspace.shared.activateFileViewerSelecting([url])
                         } catch {
                             print("导出失败: \(error)")
                         }

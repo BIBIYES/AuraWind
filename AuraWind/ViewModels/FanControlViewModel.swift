@@ -22,12 +22,12 @@ final class FanControlViewModel: BaseViewModel {
     @Published private(set) var isMonitoring: Bool = false
     
     /// 当前控制模式
-    @Published private(set) var currentMode: FanMode = .auto
+    @Published private(set) var currentMode: FanMode = .balanced
     
-    /// 当前激活的曲线配置
+    /// 当前激活的温控曲线配置（用于静音/平衡）
     @Published private(set) var activeCurveProfile: CurveProfile?
     
-    /// 温度传感器数据(用于曲线控制)
+    /// 温度传感器数据(用于温控曲线)
     @Published private(set) var temperatureSensors: [TemperatureSensor] = []
     
     /// 风扇图表数据点
@@ -43,9 +43,7 @@ final class FanControlViewModel: BaseViewModel {
     
     /// 风扇控制模式
     enum FanMode: String, Codable, CaseIterable {
-        case auto = "自动"
         case manual = "手动"
-        case curve = "曲线"
         case silent = "静音"
         case balanced = "平衡"
         case performance = "性能"
@@ -134,6 +132,7 @@ final class FanControlViewModel: BaseViewModel {
             // 更新本地状态
             self.fans[fanIndex].currentSpeed = rpm
             self.fans[fanIndex].isManualControl = true
+            self.fans[fanIndex].targetSpeed = rpm
         }
     }
     
@@ -143,33 +142,28 @@ final class FanControlViewModel: BaseViewModel {
         currentMode = mode
         
         switch mode {
-        case .auto:
-            await resetToAuto()
         case .manual:
-            // 手动模式不做自动调整
-            break
-        case .curve:
-            // 如果有激活的曲线,应用它
-            if let profile = activeCurveProfile {
-                await applyCurveProfile(profile)
-            }
+            // 手动模式不做自动温控调整
+            activeCurveProfile = nil
         case .silent:
             await applyPresetMode(CurveProfile.silent)
         case .balanced:
             await applyPresetMode(CurveProfile.balanced)
         case .performance:
-            await applyPresetMode(CurveProfile.performance)
+            // 性能模式按用户预期直接拉满转速，而不是走温度曲线。
+            activeCurveProfile = nil
+            await applyMaxPerformanceMode()
         }
         
         // 保存设置
         saveSettings()
     }
     
-    /// 应用曲线配置
+    /// 应用曲线配置（从设置页调用时默认映射到平衡模式）
     /// - Parameter profile: 曲线配置
     func applyCurveProfile(_ profile: CurveProfile) async {
         activeCurveProfile = profile
-        currentMode = .curve
+        currentMode = .balanced
         
         // 根据当前温度应用曲线
         await updateFansBasedOnCurve()
@@ -178,27 +172,15 @@ final class FanControlViewModel: BaseViewModel {
         saveSettings()
     }
     
-    /// 重置为自动模式
-    func resetToAuto() async {
-        currentMode = .auto
-        activeCurveProfile = nil
-        
-        for (index, _) in fans.enumerated() {
-            await performAsyncOperation {
-                try await self.smcService.setFanAutoMode(index: index)
-                self.fans[index].isManualControl = false
-            }
-        }
-        
-        saveSettings()
-    }
-    
     /// 刷新风扇信息
     func refreshFans() async {
         await performAsyncOperation {
             for (index, _) in self.fans.enumerated() {
                 let speed = try await self.smcService.getFanCurrentSpeed(index: index)
-                self.fans[index].currentSpeed = speed
+                // 某些机型手动模式下读取当前转速会返回 0，避免覆盖本地目标导致重复写入。
+                if speed > 0 || !self.fans[index].isManualControl {
+                    self.fans[index].currentSpeed = speed
+                }
             }
         }
     }
@@ -305,15 +287,30 @@ final class FanControlViewModel: BaseViewModel {
     /// 加载保存的设置
     private func loadSavedSettings() {
         // 加载上次的控制模式
-        if let modeString: String = try? persistenceService.load(String.self, forKey: "fanControlMode"),
-           let mode = FanMode(rawValue: modeString) {
-            currentMode = mode
+        if let modeString: String = try? persistenceService.load(String.self, forKey: "fanControlMode") {
+            if let mode = FanMode(rawValue: modeString) {
+                currentMode = mode
+            } else if modeString == "自动" || modeString == "曲线" {
+                // 兼容旧版本模式值，统一迁移到平衡模式。
+                currentMode = .balanced
+            }
         }
         
         // 加载曲线配置
         if let profileData: Data = try? persistenceService.load(Data.self, forKey: "activeCurveProfile"),
            let profile = try? JSONDecoder().decode(CurveProfile.self, from: profileData) {
             activeCurveProfile = profile
+        }
+
+        if activeCurveProfile == nil {
+            switch currentMode {
+            case .silent:
+                activeCurveProfile = .silent
+            case .balanced:
+                activeCurveProfile = .balanced
+            case .manual, .performance:
+                break
+            }
         }
     }
     
@@ -324,6 +321,8 @@ final class FanControlViewModel: BaseViewModel {
         if let profile = activeCurveProfile,
            let profileData = try? JSONEncoder().encode(profile) {
             try? persistenceService.save(profileData, forKey: "activeCurveProfile")
+        } else {
+            persistenceService.delete(forKey: "activeCurveProfile")
         }
     }
     
@@ -339,8 +338,10 @@ final class FanControlViewModel: BaseViewModel {
             // 收集风扇图表数据
             await collectFanChartData()
             
-            // 如果是曲线模式,根据温度调整风扇
-            if currentMode == .curve || [.silent, .balanced, .performance].contains(currentMode) {
+            // 根据当前控制模式持续校正风扇转速
+            if currentMode == .performance {
+                await applyMaxPerformanceMode()
+            } else if [.silent, .balanced].contains(currentMode) {
                 await updateFansBasedOnCurve()
             }
             
@@ -353,12 +354,14 @@ final class FanControlViewModel: BaseViewModel {
     private func updateFansBasedOnCurve() async {
         guard let profile = activeCurveProfile else { return }
         
-        // 获取CPU温度作为参考
-        guard let cpuSensor = temperatureSensors.first(where: { $0.type == .cpu }) else {
+        // 优先使用 CPU 传感器；若机型键位无法正确分类，则退化为当前最高温传感器。
+        let validSensors = temperatureSensors.filter { $0.currentTemperature > 0 }
+        guard let referenceSensor = validSensors.first(where: { $0.type == .cpu })
+            ?? validSensors.max(by: { $0.currentTemperature < $1.currentTemperature }) else {
             return
         }
         
-        let temperature = cpuSensor.currentTemperature
+        let temperature = referenceSensor.currentTemperature
         let targetSpeed = profile.interpolateFanSpeed(for: temperature)
         
         // 为所有风扇设置相同的转速
@@ -367,7 +370,8 @@ final class FanControlViewModel: BaseViewModel {
             let clampedSpeed = min(max(targetSpeed, fan.minSpeed), fan.maxSpeed)
             
             // 只有转速变化超过阈值才更新(避免频繁调整)
-            let speedDiff = abs(fan.currentSpeed - clampedSpeed)
+            let referenceSpeed = fan.currentSpeed > 0 ? fan.currentSpeed : (fan.targetSpeed ?? fan.currentSpeed)
+            let speedDiff = abs(referenceSpeed - clampedSpeed)
             if speedDiff > 100 {
                 await setFanSpeed(fanIndex: index, rpm: clampedSpeed)
             }
@@ -378,6 +382,20 @@ final class FanControlViewModel: BaseViewModel {
     private func applyPresetMode(_ profile: CurveProfile) async {
         activeCurveProfile = profile
         await updateFansBasedOnCurve()
+    }
+
+    /// 性能模式：直接将所有风扇拉到最大转速
+    private func applyMaxPerformanceMode() async {
+        for (index, fan) in fans.enumerated() {
+            let targetSpeed = fan.maxSpeed
+            let referenceSpeed = fan.currentSpeed > 0 ? fan.currentSpeed : (fan.targetSpeed ?? fan.currentSpeed)
+            let speedDiff = abs(referenceSpeed - targetSpeed)
+            
+            // 非手动控制或与目标差距较大时，重新下发目标转速
+            if !fan.isManualControl || speedDiff > 80 {
+                await setFanSpeed(fanIndex: index, rpm: targetSpeed)
+            }
+        }
     }
     
     /// 收集风扇图表数据
