@@ -83,12 +83,15 @@ struct AuraWindApp: App {
             }
         }
         
-        // 菜单栏图标
-        MenuBarExtra("AuraWind", image: "MenuBarIcon") {
+        // 菜单栏图标（仅显示图标，避免文字挤占）
+        MenuBarExtra {
             MenuBarView(
                 fanViewModel: fanViewModel,
                 tempViewModel: tempViewModel
             )
+        } label: {
+            Label("AuraWind", image: "MenuBarIcon")
+                .labelStyle(.iconOnly)
         }
         .menuBarExtraStyle(.window)
     }
