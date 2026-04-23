@@ -1,0 +1,48 @@
+name: Build On Main
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: build-main-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode Version
+        run: xcodebuild -version
+
+      - name: Build Release App
+        env:
+          DERIVED_DATA_PATH: ${{ github.workspace }}/build/DerivedData
+        run: |
+          xcodebuild \
+            -project AuraWind.xcodeproj \
+            -scheme AuraWind \
+            -configuration Release \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            clean build
+
+      - name: Package App
+        env:
+          APP_PATH: ${{ github.workspace }}/build/DerivedData/Build/Products/Release/AuraWind.app
+        run: |
+          test -d "$APP_PATH"
+          mkdir -p dist
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" dist/AuraWind-${{ github.sha }}.zip
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AuraWind-${{ github.sha }}
+          path: dist/AuraWind-${{ github.sha }}.zip
+          if-no-files-found: error
