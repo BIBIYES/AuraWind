@@ -458,7 +458,7 @@ final class HelperToolManager {
                         userInfo: [NSLocalizedDescriptionKey: errorMessage]
                     )
                     continuation.resume(throwing: error)
-                } else if let info = info {
+                } else if let info = info as? [String: Any] {
                     continuation.resume(returning: info)
                 } else {
                     let error = NSError(
@@ -524,7 +524,7 @@ final class HelperToolManager {
         
         return await withCheckedContinuation { continuation in
             proxy.checkStatus { status in
-                continuation.resume(returning: status)
+                continuation.resume(returning: status as? [String: Any] ?? [:])
             }
         }
     }

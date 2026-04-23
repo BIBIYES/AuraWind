@@ -49,7 +49,7 @@ import Foundation
     /// - Parameters:
     ///   - index: 风扇索引
     ///   - reply: 回调，返回风扇信息字典和错误信息
-    func getFanInfo(index: Int, reply: @escaping ([String: Any]?, String?) -> Void)
+    func getFanInfo(index: Int, reply: @escaping (NSDictionary?, String?) -> Void)
     
     /// 设置风扇转速
     /// - Parameters:
@@ -72,7 +72,7 @@ import Foundation
     
     /// 检查 Helper Tool 状态
     /// - Parameter reply: 回调，返回状态信息
-    func checkStatus(reply: @escaping ([String: Any]) -> Void)
+    func checkStatus(reply: @escaping (NSDictionary) -> Void)
 }
 
 /// Helper Tool 配置常量

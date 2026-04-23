@@ -228,7 +228,7 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
         }
     }
     
-    func getFanInfo(index: Int, reply: @escaping ([String: Any]?, String?) -> Void) {
+    func getFanInfo(index: Int, reply: @escaping (NSDictionary?, String?) -> Void) {
         log("获取风扇 \(index) 信息...", level: .verbose)
         
         guard isConnected, let connection = smcConnection else {
@@ -242,7 +242,7 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
             let maxSpeed = try connection.readValue(key: "F\(index)Mx", type: .fpe2)
             let currentSpeed = try connection.readValue(key: "F\(index)Ac", type: .fpe2)
             
-            let info: [String: Any] = [
+            let info: NSDictionary = [
                 "index": index,
                 "minSpeed": Int(minSpeed.value),
                 "maxSpeed": Int(maxSpeed.value),
@@ -310,8 +310,8 @@ class SMCHelperTool: NSObject, NSXPCListenerDelegate, HelperToolProtocol {
         reply(HelperToolConstants.helperToolVersion)
     }
     
-    func checkStatus(reply: @escaping ([String: Any]) -> Void) {
-        let status: [String: Any] = [
+    func checkStatus(reply: @escaping (NSDictionary) -> Void) {
+        let status: NSDictionary = [
             "version": HelperToolConstants.helperToolVersion,
             "isConnected": isConnected,
             "bundleID": HelperToolConstants.helperToolBundleID,

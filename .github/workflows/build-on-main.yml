@@ -25,12 +25,14 @@ jobs:
         env:
           DERIVED_DATA_PATH: ${{ github.workspace }}/build/DerivedData
         run: |
+          set -o pipefail
+          mkdir -p build/logs
           xcodebuild \
             -project AuraWind.xcodeproj \
             -scheme AuraWind \
             -configuration Release \
             -derivedDataPath "$DERIVED_DATA_PATH" \
-            clean build
+            clean build | tee build/logs/xcodebuild.log
 
       - name: Package App
         env:
@@ -46,3 +48,11 @@ jobs:
           name: AuraWind-${{ github.sha }}
           path: dist/AuraWind-${{ github.sha }}.zip
           if-no-files-found: error
+
+      - name: Upload Build Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.sha }}
+          path: build/logs/xcodebuild.log
+          if-no-files-found: ignore
