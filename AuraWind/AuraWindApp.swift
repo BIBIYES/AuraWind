@@ -8,6 +8,15 @@
 import SwiftUI
 
 final class AuraWindAppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+
+        Task { @MainActor in
+            AuraWindApp.bootstrapServicesIfNeeded()
+            NSApp.windows.forEach { $0.orderOut(nil) }
+        }
+    }
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
     }
@@ -20,19 +29,22 @@ struct AuraWindApp: App {
     
     private static let sharedSMCService = SMCServiceWithHelper()
     private static let sharedPersistenceService = PersistenceService()
+    private static let sharedFanViewModel = FanControlViewModel(
+        smcService: sharedSMCService,
+        persistenceService: sharedPersistenceService
+    )
+    private static let sharedTempViewModel = TemperatureMonitorViewModel(
+        smcService: sharedSMCService,
+        persistenceService: sharedPersistenceService
+    )
+    @MainActor private static var didBootstrapServices = false
     @NSApplicationDelegateAdaptor(AuraWindAppDelegate.self) private var appDelegate
     
     // MARK: - State
     
-    @StateObject private var fanViewModel = FanControlViewModel(
-        smcService: AuraWindApp.sharedSMCService,
-        persistenceService: AuraWindApp.sharedPersistenceService
-    )
+    @StateObject private var fanViewModel = AuraWindApp.sharedFanViewModel
     
-    @StateObject private var tempViewModel = TemperatureMonitorViewModel(
-        smcService: AuraWindApp.sharedSMCService,
-        persistenceService: AuraWindApp.sharedPersistenceService
-    )
+    @StateObject private var tempViewModel = AuraWindApp.sharedTempViewModel
     
     @State private var showPermissionView = false
     @State private var permissionGranted = true
@@ -46,7 +58,7 @@ struct AuraWindApp: App {
                 SMCPermissionView {
                     permissionGranted = true
                     showPermissionView = false
-                    initializeServices()
+                    AuraWindApp.bootstrapServicesIfNeeded()
                 }
             } else {
                 MainView(
@@ -54,16 +66,13 @@ struct AuraWindApp: App {
                     tempViewModel: tempViewModel
                 )
                 .onAppear {
-                    // 使用 Helper Tool 时，直接初始化服务
-                    NSLog("[AuraWindApp] MainView appeared, initializing services...")
-                    initializeServices()
-                    
                     if !permissionGranted {
                         checkPermissions()
                     }
                 }
             }
         }
+        .defaultLaunchBehavior(.suppressed)
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
         .commands {
@@ -104,26 +113,32 @@ struct AuraWindApp: App {
     
     /// 初始化服务
     private func initializeServices() {
-        Task {
+        AuraWindApp.bootstrapServicesIfNeeded()
+    }
+
+    @MainActor
+    static func bootstrapServicesIfNeeded() {
+        guard !didBootstrapServices else { return }
+        didBootstrapServices = true
+
+        Task { @MainActor in
             print("🚀 开始初始化服务...")
-            
-            // 启动 SMC 服务（使用 Helper Tool）
+
             do {
-                try await Self.sharedSMCService.start()
+                try await sharedSMCService.start()
                 print("✅ SMC 服务已启动")
             } catch {
                 print("❌ SMC 服务启动失败: \(error)")
-                return // 如果 SMC 启动失败，不继续
+                didBootstrapServices = false
+                return
             }
-            
-            // 启动温度监控
-            await tempViewModel.initializeSensors()
-            tempViewModel.startMonitoring()
-            
-            // 启动风扇控制
-            await fanViewModel.initializeFans()
-            fanViewModel.startMonitoring()
-            
+
+            await sharedTempViewModel.initializeSensors()
+            sharedTempViewModel.startMonitoring()
+
+            await sharedFanViewModel.initializeFans()
+            sharedFanViewModel.startMonitoring()
+
             print("✅ 所有服务初始化完成")
         }
     }
