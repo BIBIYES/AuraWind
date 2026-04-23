@@ -103,6 +103,12 @@ final class FanControlViewModel: BaseViewModel {
         monitoringTask = nil
         isMonitoring = false
     }
+
+    /// 系统休眠前释放风扇控制权，避免休眠期间持续高转速
+    func prepareForSystemSleep() async {
+        stopMonitoring()
+        await releaseAllFansToAutoMode()
+    }
     
     /// 初始化风扇列表
     func initializeFans() async {
@@ -419,6 +425,33 @@ final class FanControlViewModel: BaseViewModel {
         if fanChartData.count > maxChartDataPoints {
             let data = fanChartData
             fanChartData = Array(data.suffix(maxChartDataPoints))
+        }
+    }
+
+    /// 将所有风扇恢复为系统自动调速
+    private func releaseAllFansToAutoMode() async {
+        let indices: [Int]
+        if fans.isEmpty {
+            if let fanCount = try? await smcService.getFanCount() {
+                indices = Array(0..<fanCount)
+            } else {
+                return
+            }
+        } else {
+            indices = fans.map(\.index)
+        }
+
+        for index in indices {
+            do {
+                try await smcService.setFanAutoMode(index: index)
+            } catch {
+                print("⚠️ 设置风扇 \(index) 自动模式失败: \(error)")
+            }
+        }
+
+        for fanIndex in fans.indices {
+            fans[fanIndex].isManualControl = false
+            fans[fanIndex].targetSpeed = nil
         }
     }
 }

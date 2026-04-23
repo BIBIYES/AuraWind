@@ -8,11 +8,21 @@
 import SwiftUI
 
 final class AuraWindAppDelegate: NSObject, NSApplicationDelegate {
+    private var workspaceObservers: [NSObjectProtocol] = []
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        registerWorkspacePowerObservers()
 
         Task { @MainActor in
             AuraWindApp.bootstrapServicesIfNeeded()
+        }
+    }
+
+    deinit {
+        let center = NSWorkspace.shared.notificationCenter
+        for observer in workspaceObservers {
+            center.removeObserver(observer)
         }
     }
 
@@ -22,6 +32,32 @@ final class AuraWindAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
+    }
+
+    private func registerWorkspacePowerObservers() {
+        let center = NSWorkspace.shared.notificationCenter
+
+        let willSleepObserver = center.addObserver(
+            forName: NSWorkspace.willSleepNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                await AuraWindApp.handleSystemWillSleep()
+            }
+        }
+
+        let didWakeObserver = center.addObserver(
+            forName: NSWorkspace.didWakeNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            Task { @MainActor in
+                await AuraWindApp.handleSystemDidWake()
+            }
+        }
+
+        workspaceObservers = [willSleepObserver, didWakeObserver]
     }
 }
 
@@ -41,6 +77,7 @@ struct AuraWindApp: App {
         persistenceService: sharedPersistenceService
     )
     @MainActor private static var didBootstrapServices = false
+    @MainActor private static var didPauseForSystemSleep = false
     @NSApplicationDelegateAdaptor(AuraWindAppDelegate.self) private var appDelegate
     
     // MARK: - State
@@ -147,6 +184,34 @@ struct AuraWindApp: App {
 
             print("✅ 所有服务初始化完成")
         }
+    }
+
+    @MainActor
+    static func handleSystemWillSleep() async {
+        guard didBootstrapServices else { return }
+        print("🌙 检测到系统休眠，释放风扇控制权")
+
+        sharedTempViewModel.stopMonitoring()
+        await sharedFanViewModel.prepareForSystemSleep()
+        didPauseForSystemSleep = true
+    }
+
+    @MainActor
+    static func handleSystemDidWake() async {
+        guard didPauseForSystemSleep else { return }
+        print("☀️ 系统唤醒，恢复风扇与温度监控")
+
+        do {
+            try await sharedSMCService.connect()
+            await sharedTempViewModel.initializeSensors()
+            await sharedFanViewModel.initializeFans()
+            sharedTempViewModel.startMonitoring()
+            sharedFanViewModel.startMonitoring()
+        } catch {
+            print("❌ 唤醒后恢复监控失败: \(error)")
+        }
+
+        didPauseForSystemSleep = false
     }
 }
 
